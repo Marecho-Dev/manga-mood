@@ -1,7 +1,6 @@
 import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 
 import { api } from "~/utils/api";
 //this is the home page
@@ -22,7 +21,6 @@ const Home: NextPage = () => {
           {!user.isSignedIn && <SignInButton />}
           {!!user.isSignedIn && <SignOutButton />}
         </div>
-        <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
       </main>
     </>
   );
