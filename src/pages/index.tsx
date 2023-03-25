@@ -5,9 +5,12 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 //this is the home page
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
   const user = useUser();
+  //this is home page. Created user variable which is the useUser hook from clerk.
+  //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without having the user to run the database code themselves
+
+  const { data } = api.user.getAll.useQuery();
+  console.log(data);
 
   return (
     <>
@@ -20,6 +23,11 @@ const Home: NextPage = () => {
         <div>
           {!user.isSignedIn && <SignInButton />}
           {!!user.isSignedIn && <SignOutButton />}
+        </div>
+        <div>
+          {data?.map((user) => (
+            <div key={user.id}>{user.username}</div>
+          ))}
         </div>
       </main>
     </>
