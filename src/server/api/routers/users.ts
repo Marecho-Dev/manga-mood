@@ -1,5 +1,3 @@
-import clerkClient from "@clerk/clerk-sdk-node";
-import postcss from "postcss";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -12,12 +10,5 @@ export const userRouter = createTRPCRouter({
       take: 100,
       // where: {authorId: ctx.user.id},});this would be if you wanted to do a specific where clause for example in our case mangas liked by a specific users
     });
-
-    //this will map over each post in theors project and get the authoId of the post via the userList from clerk
-    //in our example, we would need to do this for mangas from our own db
-    // const user = await clerkClient.users.getUserList({
-    //   userId: postcss.map((users) => users.authorId),
-    //   limit: 100,
-    // })
   }),
 });
