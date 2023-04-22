@@ -6,23 +6,17 @@ import { SetStateAction, useState } from "react";
 import { api } from "~/utils/api";
 //this is the home page
 const Home: NextPage = () => {
-  const user = useUser();
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
   // having the user to run the database code themselves
 
-  const { data } = api.user.getAll.useQuery();
-  console.log(data);
-  const [message, setMessage] = useState("");
+  const [input, setInput] = useState<string>("");
+  const [executeQuery, SetExectureQuery] = useState<boolean>(false);
+  const queryData = api.user.getIdByUsername.useQuery(
+    { username: input },
+    { enabled: executeQuery }
+  );
 
-  const [updated, setUpdated] = useState("");
-
-  const handleKeyDown = (event: { key: string }) => {
-    if (event.key === "Enter") {
-      // 👇 Get input value
-      setUpdated(message);
-    }
-  };
   return (
     <>
       <Head>
@@ -35,6 +29,18 @@ const Home: NextPage = () => {
           <input
             placeholder=">MAL Username"
             className="justify-centerborder-none flex h-full w-full items-center bg-transparent p-2 text-xl text-gray-300 focus:outline-none"
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (input !== "") {
+                  SetExectureQuery(true);
+                  console.log(queryData);
+                }
+              }
+            }}
           />
         </div>
       </main>
