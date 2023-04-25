@@ -1,12 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+import type { AxiosResponse } from "axios";
 import type { AxiosError } from "axios";
-import { contextProps } from "@trpc/react-query/shared";
-import { api } from "~/utils/api";
 import type { PrismaClient, User, Manga } from "@prisma/client";
-import { Token } from "@clerk/nextjs/dist/api";
-import { env } from "process";
 
 //publicProcedure method to generate a function that your client calls
 //publicProcedure is a procedure that anyone can call without being authenticated, cause we want anyone to have access to the post
