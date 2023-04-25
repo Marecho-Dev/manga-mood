@@ -25,6 +25,12 @@ const Home: NextPage = () => {
     { enabled: executeQuery }
   );
 
+  function isMangaDataArray(data: unknown): data is MangaData[] {
+    return (
+      Array.isArray(data) &&
+      data.every((item) => typeof item === "object" && "manga_id" in item)
+    );
+  }
   return (
     <>
       <Head>
@@ -54,7 +60,7 @@ const Home: NextPage = () => {
           </div>
         </main>
       )}
-      {queryData.isSuccess && (
+      {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div>
           <table>
             <thead>
