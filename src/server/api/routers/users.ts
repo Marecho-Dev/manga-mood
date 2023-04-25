@@ -199,6 +199,8 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
 const recommendationApiCall = async (
   userId: number
 ): Promise<MangaRecommendation[]> => {
+  console.log(userId);
+  console.log("recommendationApiCall");
   // console.log(userId);
   try {
     const recommendations: AxiosResponse<MangaRecommendation[]> =
@@ -225,6 +227,8 @@ const malUsernameSearch = async (username: string): Promise<string> => {
 };
 
 const isUserNull = async (user: User[], username: string, ctx: Context) => {
+  console.log(user);
+  console.log(username);
   // console.log(user[0]?.username);
   if (Object.keys(user).length === 0) {
     try {
