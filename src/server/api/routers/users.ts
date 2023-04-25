@@ -157,7 +157,7 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
     console.log(error);
   }
 };
-const recommendationApiCall = async (userId: number | null): Promise<any> => {
+const recommendationApiCall = async (userId: number): Promise<any> => {
   console.log(userId);
   try {
     const recommendations = await axios.get(
