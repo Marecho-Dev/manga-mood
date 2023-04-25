@@ -203,6 +203,7 @@ const recommendationApiCall = async (
   console.log("recommendationApiCall");
   // console.log(userId);
   try {
+    console.log("trying");
     const recommendations: AxiosResponse<MangaRecommendation[]> =
       await axios.get(
         `https://restful-manga-recs.onrender.com/manga_recs/${userId}`
