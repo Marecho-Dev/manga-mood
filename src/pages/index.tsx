@@ -33,7 +33,7 @@ const Home: NextPage = () => {
     );
   }
 
-  if (!queryData.isSuccess) {
+  if (queryData.isSuccess) {
     console.log(queryData);
   }
   return (
