@@ -5,6 +5,19 @@ import { SetStateAction, useState } from "react";
 
 import { api } from "~/utils/api";
 //this is the home page
+
+type MangaData = {
+  average_rating: number;
+  manga_count: number;
+  manga_id: number;
+  weighted_rating: number;
+};
+
+type QueryData = {
+  isSuccess: boolean;
+  data: MangaData[];
+};
+
 const Home: NextPage = () => {
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
@@ -57,7 +70,7 @@ const Home: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              {queryData.data.map((mangaData, index) => (
+              {queryData.data.map((mangaData: MangaData, index: number) => (
                 <tr key={index}>
                   <td>{mangaData.manga_id}</td>
                   <td>{mangaData.average_rating}</td>
