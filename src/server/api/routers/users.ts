@@ -198,7 +198,7 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
       return "failure";
     }
   } else {
-    return recommendationApiCall(user[0]?.id);
+    return recommendationApiCall(user[0]?.id || 0); //default value, theoretically this should never be hit.
   }
 };
 
