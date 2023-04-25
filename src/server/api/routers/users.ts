@@ -71,8 +71,8 @@ interface MangaRecommendation {
 }
 
 async function mangaInsert(manga: Manga, ctx: Context) {
-  console.log(`calling manga insert on`);
-  console.log(manga);
+  // console.log(`calling manga insert on`);
+  // console.log(manga);
   try {
     await ctx.prisma.manga.create({
       data: {
@@ -124,10 +124,10 @@ const malMangaSearch = async (mangaId: number) => {
         params: params,
       }
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return "failure";
   }
 };
@@ -193,13 +193,13 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 const recommendationApiCall = async (
   userId: number
 ): Promise<MangaRecommendation[]> => {
-  console.log(userId);
+  // console.log(userId);
   try {
     const recommendations: AxiosResponse<MangaRecommendation[]> =
       await axios.get(
@@ -225,7 +225,7 @@ const malUsernameSearch = async (username: string): Promise<string> => {
 };
 
 const isUserNull = async (user: User[], username: string, ctx: Context) => {
-  console.log(user[0]?.username);
+  // console.log(user[0]?.username);
   if (Object.keys(user).length === 0) {
     try {
       const queryResponse = await malUsernameSearch(username);
