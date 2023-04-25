@@ -26,6 +26,7 @@ const Home: NextPage = () => {
   );
 
   function isMangaDataArray(data: unknown): data is MangaData[] {
+    console.log(data);
     return (
       Array.isArray(data) &&
       data.every((item) => typeof item === "object" && "manga_id" in item)
