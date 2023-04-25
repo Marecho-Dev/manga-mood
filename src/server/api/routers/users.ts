@@ -34,6 +34,8 @@ async function genreInsert(malId: number, genres: [], ctx: Context) {
 }
 
 async function mangaInsert(manga: Manga, ctx: Context) {
+  console.log(`calling manga insert on`);
+  console.log(manga);
   try {
     await ctx.prisma.manga.create({
       data: {
@@ -104,8 +106,8 @@ async function findMangaById(
 }
 
 const userMangaListSearch = async (username: string, ctx: Context) => {
-  console.log(`username is ${username}`);
   const tokenInfo = process.env.NEXT_PUBLIC_MAL_API_ACCESS_TOKEN;
+  //setting up axios request
   const headers = {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     Authorization: `Bearer ${tokenInfo}`,
@@ -124,45 +126,49 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
         params: params,
       }
     );
-
-    // for (const manga of response.data.data) {
-    //   console.log(manga);
-
-    //   const exists = await findMangaById(manga.node.id, ctx);
-    //   //if manga doesn't exist in our planetscale DB, do a mal api request and then insert manga into the db.
-    //   if (exists === null) {
-    //     const mangaMal = await malMangaSearch(manga.node.id, ctx);
-    //     console.log(mangaMal);
-    //   }
-    // }
-    const test = await findMangaById(155723, ctx);
-    if (test === null) {
-      const mangaMal = await malMangaSearch(155723, ctx);
-      let score = 0;
-      console.log(mangaMal);
-      if ("mean" in mangaMal) {
-        score = mangaMal.mean;
+    //looping through the axios return which is a list of mangas
+    for (const manga of response.data.data) {
+      const exists = await findMangaById(manga.node.id, ctx);
+      //if manga doesn't exist in our planetscale DB, do a mal api request and then insert manga into the db.
+      if (exists === null) {
+        const mangaMal = await malMangaSearch(manga.node.id, ctx);
+        let score = 0;
+        if ("mean" in mangaMal) {
+          score = mangaMal.mean;
+        }
+        const mangaDbInsert = await mangaInsert(
+          {
+            mal_id: mangaMal.id,
+            imageUrl: mangaMal.main_picture.large,
+            rating: score,
+            title: mangaMal.title,
+          },
+          ctx
+        );
+        //-------------------- commenting this piece out for now. genre table needs to be updated as it's causing some issues. --------------------
+        // const genreDbInsert = await genreInsert(
+        //   mangaMal.id,
+        //   mangaMal.genres,
+        //   ctx
+        // );
       }
-      const mangaDbInsert = await mangaInsert(
-        {
-          mal_id: mangaMal.id,
-          imageUrl: mangaMal.main_picture.large,
-          rating: score,
-          title: mangaMal.title,
-        },
-        ctx
-      );
-      const genreDbInsert = await genreInsert(
-        mangaMal.id,
-        mangaMal.genres,
-        ctx
-      );
     }
   } catch (error) {
     console.log(error);
   }
 };
-
+const recommendationApiCall = async (userId: number | null): Promise<any> => {
+  console.log(userId);
+  try {
+    const recommendations = await axios.get(
+      `https://restful-manga-recs.onrender.com/manga_recs/${userId}`
+    );
+    // console.log(recommendations);
+    return recommendations.data;
+  } catch (error) {
+    return error;
+  }
+};
 const malUsernameSearch = async (username: string): Promise<string> => {
   try {
     await axios.get(`https://myanimelist.net/profile/${username}`);
@@ -187,12 +193,12 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
             username: username,
           },
         });
-      return userMangaListSearch("marecho", ctx);
+      return userMangaListSearch(username, ctx);
     } catch (error) {
       return "failure";
     }
   } else {
-    return "success";
+    return recommendationApiCall(user[0]?.id);
   }
 };
 
