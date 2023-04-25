@@ -208,8 +208,10 @@ const recommendationApiCall = async (
         `https://restful-manga-recs.onrender.com/manga_recs/${userId}`
       );
     // console.log(recommendations);
+    console.log(recommendations);
     return recommendations.data;
   } catch (error) {
+    console.log("caught error");
     throw error;
   }
 };
