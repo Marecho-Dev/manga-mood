@@ -15,6 +15,83 @@ type Context = {
   prisma: PrismaClient;
 };
 
+//need to update schema for genres table. This needs to be able to have multiple
+async function genreInsert(malId: number, genres: [], ctx: Context) {
+  try {
+    for (const genre of genres) {
+      console.log(genre);
+      await ctx.prisma.genre.create({
+        data: {
+          mal_id: malId,
+          genre_name: genre.name,
+        },
+      });
+    }
+    return "success";
+  } catch (error) {
+    return "failure";
+  }
+}
+
+async function mangaInsert(manga: Manga, ctx: Context) {
+  try {
+    await ctx.prisma.manga.create({
+      data: {
+        mal_id: manga.mal_id,
+        imageUrl: manga.imageUrl,
+        rating: manga.rating,
+        title: manga.title,
+      },
+    });
+    return "success";
+  } catch (error) {
+    return "failure";
+  }
+}
+
+//this is cloned off mangaInsert right now.
+async function userMangaListInsert(manga: Manga, ctx: Context) {
+  try {
+    await ctx.prisma.manga.create({
+      data: {
+        mal_id: manga.mal_id,
+        imageUrl: manga.imageUrl,
+        rating: manga.rating,
+        title: manga.title,
+      },
+    });
+    return userMangaListSearch("marecho", ctx);
+  } catch (error) {
+    return "failure";
+  }
+}
+
+const malMangaSearch = async (mangaId: string, ctx: Context) => {
+  const tokenInfo = process.env.NEXT_PUBLIC_MAL_API_ACCESS_TOKEN;
+  const headers = {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    Authorization: `Bearer ${tokenInfo}`,
+  };
+
+  const params = {
+    fields:
+      "id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,status,genres,my_list_status",
+  };
+  try {
+    const response: AxiosResponse = await axios.get(
+      `https://api.myanimelist.net/v2/manga/${mangaId}`,
+      {
+        headers: headers,
+        params: params,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return "failure";
+  }
+};
+
 async function findMangaById(
   mangaId: number,
   ctx: Context
@@ -22,6 +99,7 @@ async function findMangaById(
   const manga = await ctx.prisma.manga.findUnique({
     where: { mal_id: mangaId },
   });
+  //returns null if manga doesn't exist yet.
   return manga;
 }
 
@@ -47,10 +125,38 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
       }
     );
 
-    for (const manga of response.data.data) {
-      console.log(manga);
-      const exists = await findMangaById(manga.node.id, ctx);
-      console.log(exists);
+    // for (const manga of response.data.data) {
+    //   console.log(manga);
+
+    //   const exists = await findMangaById(manga.node.id, ctx);
+    //   //if manga doesn't exist in our planetscale DB, do a mal api request and then insert manga into the db.
+    //   if (exists === null) {
+    //     const mangaMal = await malMangaSearch(manga.node.id, ctx);
+    //     console.log(mangaMal);
+    //   }
+    // }
+    const test = await findMangaById(155723, ctx);
+    if (test === null) {
+      const mangaMal = await malMangaSearch(155723, ctx);
+      let score = 0;
+      console.log(mangaMal);
+      if ("mean" in mangaMal) {
+        score = mangaMal.mean;
+      }
+      const mangaDbInsert = await mangaInsert(
+        {
+          mal_id: mangaMal.id,
+          imageUrl: mangaMal.main_picture.large,
+          rating: score,
+          title: mangaMal.title,
+        },
+        ctx
+      );
+      const genreDbInsert = await genreInsert(
+        mangaMal.id,
+        mangaMal.genres,
+        ctx
+      );
     }
   } catch (error) {
     console.log(error);
