@@ -34,7 +34,7 @@ const Home: NextPage = () => {
   }
 
   if (!queryData.isSuccess) {
-    console.log(queryData.data);
+    console.log(queryData);
   }
   return (
     <>
