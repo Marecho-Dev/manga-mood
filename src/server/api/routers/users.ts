@@ -16,22 +16,22 @@ type Context = {
 };
 
 //need to update schema for genres table. This needs to be able to have multiple
-async function genreInsert(malId: number, genres: [], ctx: Context) {
-  try {
-    for (const genre of genres) {
-      console.log(genre);
-      await ctx.prisma.genre.create({
-        data: {
-          mal_id: malId,
-          genre_name: genre.name,
-        },
-      });
-    }
-    return "success";
-  } catch (error) {
-    return "failure";
-  }
-}
+// async function genreInsert(malId: number, genres: [], ctx: Context) {
+//   try {
+//     for (const genre of genres) {
+//       console.log(genre);
+//       await ctx.prisma.genre.create({
+//         data: {
+//           mal_id: malId,
+//           genre_name: genre.name,
+//         },
+//       });
+//     }
+//     return "success";
+//   } catch (error) {
+//     return "failure";
+//   }
+// }
 
 async function mangaInsert(manga: Manga, ctx: Context) {
   console.log(`calling manga insert on`);
