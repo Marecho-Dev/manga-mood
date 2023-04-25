@@ -32,6 +32,10 @@ const Home: NextPage = () => {
       data.every((item) => typeof item === "object" && "manga_id" in item)
     );
   }
+
+  if (!queryData.isSuccess) {
+    console.log(queryData.data);
+  }
   return (
     <>
       <Head>
