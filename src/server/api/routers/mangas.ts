@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import type { AxiosError } from "axios";
 import { contextProps } from "@trpc/react-query/shared";
 import { api } from "~/utils/api";
-import type { PrismaClient, User, Manga } from "@prisma/client";
+import type { PrismaClient, User } from "@prisma/client";
 import { Token } from "@clerk/nextjs/dist/api";
 import { env } from "process";
 
@@ -15,17 +15,7 @@ type Context = {
   prisma: PrismaClient;
 };
 
-async function findMangaById(
-  mangaId: number,
-  ctx: Context
-): Promise<Manga | null> {
-  const manga = await ctx.prisma.manga.findUnique({
-    where: { mal_id: mangaId },
-  });
-  return manga;
-}
-
-const userMangaListSearch = async (username: string, ctx: Context) => {
+const userMangaListSearch = (username: string) => {
   console.log(`username is ${username}`);
   const tokenInfo = process.env.NEXT_PUBLIC_MAL_API_ACCESS_TOKEN;
   const headers = {
@@ -38,23 +28,19 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
     limit: "1000",
     // 'offset': '5'
   };
-  try {
-    const response: AxiosResponse = await axios.get(
-      `https://api.myanimelist.net/v2/users/${username}/mangalist`,
-      {
-        headers: headers,
-        params: params,
+  axios
+    .get(`https://api.myanimelist.net/v2/users/${username}/mangalist`, {
+      headers: headers,
+      params: params,
+    })
+    .then((response) => {
+      for (const manga of response.data.data) {
+        console.log(manga);
       }
-    );
-
-    for (const manga of response.data.data) {
-      console.log(manga);
-      const exists = await findMangaById(manga.node.id, ctx);
-      console.log(exists);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 const malUsernameSearch = async (username: string): Promise<string> => {
@@ -70,7 +56,7 @@ const malUsernameSearch = async (username: string): Promise<string> => {
   }
 };
 
-const isUserNull = async (user: User[], username: string, ctx: Context) => {
+const isMangaNull = async (user: User[], username: string, ctx: Context) => {
   console.log(user[0]?.username);
   if (Object.keys(user).length === 0) {
     try {
@@ -81,7 +67,7 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
             username: username,
           },
         });
-      return userMangaListSearch("marecho", ctx);
+      return userMangaListSearch(username);
     } catch (error) {
       return "failure";
     }
@@ -90,28 +76,28 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
   }
 };
 
-export const userRouter = createTRPCRouter({
+export const mangaRouter = createTRPCRouter({
   /**
    * Search for user.
    */
-  getIdByUsername: publicProcedure
+  getMangaById: publicProcedure
     .input(z.object({ username: z.string() }))
     .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findMany({
+      const manga = await ctx.prisma.user.findMany({
         where: { username: input.username },
       });
 
       return isUserNull(user, input.username, ctx);
     }),
 
-  createUsername: publicProcedure
+  createManga: publicProcedure
     .input(
       z.object({
         username: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const post = await ctx.prisma.user.create({
+      const manga = await ctx.prisma.manga.create({
         data: {
           username: input.username,
         },
