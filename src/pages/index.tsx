@@ -1,7 +1,6 @@
-import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { api } from "~/utils/api";
 //this is the home page
@@ -11,11 +10,6 @@ type MangaData = {
   manga_count: number;
   manga_id: number;
   weighted_rating: number;
-};
-
-type QueryData = {
-  isSuccess: boolean;
-  data: MangaData[];
 };
 
 const Home: NextPage = () => {
