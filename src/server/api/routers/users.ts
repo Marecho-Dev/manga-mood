@@ -220,7 +220,7 @@ const malUsernameSearch = async (username: string): Promise<string> => {
     if (err.response?.status === 404) {
       return "failure";
     }
-    throw error;
+    throw err.message;
   }
 };
 
