@@ -19,6 +19,7 @@ type QueryData = {
 };
 
 const Home: NextPage = () => {
+  //comment
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
   // having the user to run the database code themselves
