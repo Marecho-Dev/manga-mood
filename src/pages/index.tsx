@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
-import Image from "next/image";
 import { api } from "~/utils/api";
 //this is the home page
 
@@ -70,15 +69,29 @@ const Home: NextPage = () => {
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div>
-          <table>
+          <table
+            style={{ borderCollapse: "collapse", border: "1px solid black" }}
+          >
             <thead>
               <tr>
-                <th>Image</th>
-                <th>Manga ID</th>
-                <th>Title</th>
-                <th>Mal Rating</th>
-                <th>Similar Rating</th>
-                <th>Weighted Rating</th>
+                <th style={{ border: "1px solid black", padding: "4px" }}>
+                  Image
+                </th>
+                <th style={{ border: "1px solid black", padding: "4px" }}>
+                  Manga ID
+                </th>
+                <th style={{ border: "1px solid black", padding: "4px" }}>
+                  Title
+                </th>
+                <th style={{ border: "1px solid black", padding: "4px" }}>
+                  Mal Rating
+                </th>
+                <th style={{ border: "1px solid black", padding: "4px" }}>
+                  Similar Rating
+                </th>
+                <th style={{ border: "1px solid black", padding: "4px" }}>
+                  Weighted Rating
+                </th>
               </tr>
             </thead>
             <tbody className="row-gap">
