@@ -83,14 +83,13 @@ const Home: NextPage = () => {
             </thead>
             <tbody>
               {queryData.data.map((mangaData: MangaData, index: number) => (
-                <tr key={index}>
+                <tr key={index} className="flex flex-col gap-5">
                   <td>{mangaData.mal_id}</td>
                   <td>{mangaData.title}</td>
                   <td>
                     <div
                       style={{
-                        width: "100px",
-                        height: "100px",
+                        width: "150px",
                       }}
                     >
                       <img src={mangaData.imageUrl} alt={mangaData.title} />
