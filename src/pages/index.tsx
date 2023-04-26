@@ -81,7 +81,7 @@ const Home: NextPage = () => {
                 <th>Weighted Rating</th>
               </tr>
             </thead>
-            <tbody className="flex flex-col gap-5">
+            <tbody className="flex gap-5">
               {queryData.data.map((mangaData: MangaData, index: number) => (
                 <tr key={index}>
                   <td>{mangaData.mal_id}</td>
