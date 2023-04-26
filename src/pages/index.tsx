@@ -70,34 +70,37 @@ const Home: NextPage = () => {
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div>
           <table
-            style={{ borderCollapse: "collapse", border: "1px solid black" }}
+            style={{ borderCollapse: "collapse", border: "1px solid white" }}
           >
             <thead>
               <tr>
-                <th style={{ border: "1px solid black", padding: "4px" }}>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
                   Image
                 </th>
-                <th style={{ border: "1px solid black", padding: "4px" }}>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
                   Manga ID
                 </th>
-                <th style={{ border: "1px solid black", padding: "4px" }}>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
                   Title
                 </th>
-                <th style={{ border: "1px solid black", padding: "4px" }}>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
                   Mal Rating
                 </th>
-                <th style={{ border: "1px solid black", padding: "4px" }}>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
                   Similar Rating
                 </th>
-                <th style={{ border: "1px solid black", padding: "4px" }}>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
                   Weighted Rating
                 </th>
               </tr>
             </thead>
             <tbody className="row-gap">
               {queryData.data.map((mangaData: MangaData, index: number) => (
-                <tr key={index}>
-                  <td>
+                <tr
+                  key={index}
+                  style={{ border: "1px solid white", padding: "4px" }}
+                >
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
                     <div
                       style={{
                         width: "150px",
@@ -106,11 +109,21 @@ const Home: NextPage = () => {
                       <img src={mangaData.imageUrl} alt={mangaData.title} />
                     </div>
                   </td>
-                  <td>{mangaData.mal_id}</td>
-                  <td>{mangaData.title}</td>
-                  <td>{mangaData.rating}</td>
-                  <td>{mangaData.average_rating}</td>
-                  <td>{mangaData.weighted_rating}</td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.mal_id}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.title}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.rating}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.average_rating}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.weighted_rating}
+                  </td>
                 </tr>
               ))}
             </tbody>
