@@ -66,8 +66,11 @@ interface UserMangaListResponse {
 interface MangaRecommendation {
   average_rating: number;
   manga_count: number;
-  manga_id: number;
+  mal_id: number;
   weighted_rating: number;
+  imageUrl: string;
+  rating: number;
+  title: string;
 }
 
 async function mangaInsert(manga: Manga, ctx: Context) {

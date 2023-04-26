@@ -1,15 +1,18 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
-
+import Image from "next/image";
 import { api } from "~/utils/api";
 //this is the home page
 
 type MangaData = {
   average_rating: number;
   manga_count: number;
-  manga_id: number;
+  mal_id: number;
   weighted_rating: number;
+  imageUrl: string;
+  rating: number;
+  title: string;
 };
 
 const Home: NextPage = () => {
@@ -78,7 +81,16 @@ const Home: NextPage = () => {
             <tbody>
               {queryData.data.map((mangaData: MangaData, index: number) => (
                 <tr key={index}>
-                  <td>{mangaData.manga_id}</td>
+                  <td>{mangaData.mal_id}</td>
+                  <td>{mangaData.title}</td>
+                  <td>
+                    <Image
+                      src={mangaData.imageUrl}
+                      alt={mangaData.title}
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  </td>
+                  <td>{mangaData.rating}</td>
                   <td>{mangaData.average_rating}</td>
                   <td>{mangaData.weighted_rating}</td>
                 </tr>
