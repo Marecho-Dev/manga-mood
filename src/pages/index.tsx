@@ -77,7 +77,7 @@ const Home: NextPage = () => {
                 <th>Title</th>
                 <th>Image</th>
                 <th>Mal Rating</th>
-                <th>Similar User Rating</th>
+                <th>Similar Rating</th>
                 <th>Weighted Rating</th>
               </tr>
             </thead>
@@ -94,7 +94,7 @@ const Home: NextPage = () => {
                         height: "100px",
                       }}
                     >
-                      <Image src={mangaData.imageUrl} alt={mangaData.title} />
+                      <img src={mangaData.imageUrl} alt={mangaData.title} />
                     </div>
                   </td>
                   <td>{mangaData.rating}</td>
