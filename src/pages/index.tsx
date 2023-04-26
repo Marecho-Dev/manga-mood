@@ -74,7 +74,10 @@ const Home: NextPage = () => {
             <thead>
               <tr>
                 <th>Manga ID</th>
-                <th>Average Rating</th>
+                <th>Title</th>
+                <th>Image</th>
+                <th>Mal Rating</th>
+                <th>Similar User Rating</th>
                 <th>Weighted Rating</th>
               </tr>
             </thead>
