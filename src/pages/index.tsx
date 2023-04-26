@@ -73,19 +73,17 @@ const Home: NextPage = () => {
           <table>
             <thead>
               <tr>
+                <th>Image</th>
                 <th>Manga ID</th>
                 <th>Title</th>
-                <th>Image</th>
                 <th>Mal Rating</th>
                 <th>Similar Rating</th>
                 <th>Weighted Rating</th>
               </tr>
             </thead>
-            <tbody className="flex gap-5">
+            <tbody className="row-gap">
               {queryData.data.map((mangaData: MangaData, index: number) => (
                 <tr key={index}>
-                  <td>{mangaData.mal_id}</td>
-                  <td>{mangaData.title}</td>
                   <td>
                     <div
                       style={{
@@ -95,6 +93,8 @@ const Home: NextPage = () => {
                       <img src={mangaData.imageUrl} alt={mangaData.title} />
                     </div>
                   </td>
+                  <td>{mangaData.mal_id}</td>
+                  <td>{mangaData.title}</td>
                   <td>{mangaData.rating}</td>
                   <td>{mangaData.average_rating}</td>
                   <td>{mangaData.weighted_rating}</td>
