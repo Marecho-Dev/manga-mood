@@ -84,11 +84,15 @@ const Home: NextPage = () => {
                   <td>{mangaData.mal_id}</td>
                   <td>{mangaData.title}</td>
                   <td>
-                    <Image
-                      src={mangaData.imageUrl}
-                      alt={mangaData.title}
-                      style={{ maxWidth: "100px", maxHeight: "100px" }}
-                    />
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100px",
+                        height: "100px",
+                      }}
+                    >
+                      <Image src={mangaData.imageUrl} alt={mangaData.title} />
+                    </div>
                   </td>
                   <td>{mangaData.rating}</td>
                   <td>{mangaData.average_rating}</td>
