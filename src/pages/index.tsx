@@ -89,7 +89,6 @@ const Home: NextPage = () => {
                   <td>
                     <div
                       style={{
-                        position: "relative",
                         width: "100px",
                         height: "100px",
                       }}
