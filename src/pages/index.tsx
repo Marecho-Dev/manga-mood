@@ -86,12 +86,6 @@ const Home: NextPage = () => {
                 <th style={{ border: "1px solid white", padding: "4px" }}>
                   Mal Rating
                 </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Similar Rating
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Weighted Rating
-                </th>
               </tr>
             </thead>
             <tbody className="row-gap">
@@ -117,12 +111,6 @@ const Home: NextPage = () => {
                   </td>
                   <td style={{ border: "1px solid white", padding: "4px" }}>
                     {mangaData.rating}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.average_rating}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.weighted_rating}
                   </td>
                 </tr>
               ))}
