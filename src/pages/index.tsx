@@ -32,7 +32,7 @@ const Home: NextPage = () => {
     console.log(data);
     return (
       Array.isArray(data) &&
-      data.every((item) => typeof item === "object" && "manga_id" in item)
+      data.every((item) => typeof item === "object" && "mal_id" in item)
     );
   }
 
