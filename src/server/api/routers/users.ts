@@ -36,7 +36,13 @@ interface ApiResponse {
     medium: string;
     large: string;
   };
+  rank: number;
   mean: number;
+  media_type: string;
+  author: string;
+  status: string;
+  summary: string;
+
   // other properties can be added if needed
 }
 
@@ -71,6 +77,10 @@ interface MangaRecommendation {
   imageUrl: string;
   rating: number;
   title: string;
+  author: string;
+  rank: number;
+  media_type: string;
+  status: string;
 }
 
 async function mangaInsert(manga: Manga, ctx: Context) {
@@ -83,6 +93,32 @@ async function mangaInsert(manga: Manga, ctx: Context) {
         imageUrl: manga.imageUrl,
         rating: manga.rating,
         title: manga.title,
+        author: manga.author,
+        rank: manga.rank,
+        media_type: manga.media_type,
+        status: manga.status,
+      },
+    });
+    return "success";
+  } catch (error) {
+    return "failure";
+  }
+}
+
+async function mangaUpdate(manga: Manga, ctx: Context) {
+  // console.log(`calling manga insert on`);
+  // console.log(manga);
+  try {
+    await ctx.prisma.manga.create({
+      data: {
+        mal_id: manga.mal_id,
+        imageUrl: manga.imageUrl,
+        rating: manga.rating,
+        title: manga.title,
+        author: manga.author,
+        rank: manga.rank,
+        media_type: manga.media_type,
+        status: manga.status,
       },
     });
     return "success";
@@ -117,7 +153,7 @@ const malMangaSearch = async (mangaId: number) => {
 
   const params = {
     fields:
-      "id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,status,genres,my_list_status",
+      "id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,status,genres,media_type,my_list_status",
   };
   try {
     const response: AxiosResponse<ApiResponse> = await axios.get(
@@ -182,6 +218,11 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
               imageUrl: mangaMal.main_picture.large,
               rating: score,
               title: mangaMal.title,
+              rank: mangaMal.rank,
+              media_type: mangaMal.media_type,
+              author: mangaMal.author,
+              status: mangaMal.status,
+              summary: mangaMal.summary,
             },
             ctx
           );

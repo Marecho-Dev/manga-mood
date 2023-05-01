@@ -18,5 +18,10 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  images: {
+    domains: ["api-cdn.myanimelist.net"],
+  },
 };
+
 export default config;

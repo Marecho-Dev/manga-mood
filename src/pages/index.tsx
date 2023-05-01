@@ -2,6 +2,8 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { api } from "~/utils/api";
+import Image from "next/image";
+import { LoadingPage, LoadingSpinner } from "~/components/loading";
 //this is the home page
 
 type MangaData = {
@@ -12,6 +14,11 @@ type MangaData = {
   imageUrl: string;
   rating: number;
   title: string;
+  rank: number;
+  media_type: string;
+  author: string;
+  status: string;
+  summary: string;
 };
 
 const Home: NextPage = () => {
@@ -26,7 +33,7 @@ const Home: NextPage = () => {
     { username: input },
     { enabled: executeQuery }
   );
-
+  console.log(queryData);
   function isMangaDataArray(data: unknown): data is MangaData[] {
     console.log(data);
     return (
@@ -35,6 +42,8 @@ const Home: NextPage = () => {
     );
   }
 
+  if (!queryData.isSuccess && queryData.isLoading && queryData.isFetching)
+    return <LoadingPage />;
   if (queryData.isSuccess) {
     console.log(queryData);
   }
@@ -86,6 +95,21 @@ const Home: NextPage = () => {
                 <th style={{ border: "1px solid white", padding: "4px" }}>
                   Mal Rating
                 </th>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
+                  Summary
+                </th>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
+                  media_type
+                </th>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
+                  status
+                </th>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
+                  author
+                </th>
+                <th style={{ border: "1px solid white", padding: "4px" }}>
+                  rank
+                </th>
               </tr>
             </thead>
             <tbody className="row-gap">
@@ -95,13 +119,12 @@ const Home: NextPage = () => {
                   style={{ border: "1px solid white", padding: "4px" }}
                 >
                   <td style={{ border: "1px solid white", padding: "4px" }}>
-                    <div
-                      style={{
-                        width: "150px",
-                      }}
-                    >
-                      <img src={mangaData.imageUrl} alt={mangaData.title} />
-                    </div>
+                    <Image
+                      src={mangaData.imageUrl}
+                      alt={mangaData.title}
+                      width={150}
+                      height={300}
+                    />
                   </td>
                   <td style={{ border: "1px solid white", padding: "4px" }}>
                     {mangaData.mal_id}
@@ -111,6 +134,21 @@ const Home: NextPage = () => {
                   </td>
                   <td style={{ border: "1px solid white", padding: "4px" }}>
                     {mangaData.rating}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.summary}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.media_type}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.status}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.author}
+                  </td>
+                  <td style={{ border: "1px solid white", padding: "4px" }}>
+                    {mangaData.rank}
                   </td>
                 </tr>
               ))}
