@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { LoadingPage } from "~/components/loading";
 //this is the home page
 
 type MangaData = {
@@ -20,7 +20,59 @@ type MangaData = {
   status: string;
   summary: string;
 };
-
+export const uiCard = (mangaData: MangaData) => {
+  return (
+    <div className="group flex h-64 w-full">
+      {/* //image container */}
+      <div className="w-2/5 flex-none overflow-hidden rounded-t bg-cover text-center lg:rounded-t-none lg:rounded-l">
+        <Image
+          src={mangaData.imageUrl}
+          alt={mangaData.title}
+          width={150}
+          height={300}
+          style={{
+            width: "100%",
+            height: "100%",
+            maxWidth: "100%",
+            maxHeight: "100%",
+            flexGrow: 1,
+            objectFit: "cover",
+          }}
+        />
+      </div>
+      <div className="flex w-3/5 flex-col justify-between rounded-b border-r border-b border-l border-gray-400 bg-white p-4 leading-normal lg:rounded-b-none lg:rounded-r lg:border-l-0 lg:border-t lg:border-gray-400">
+        <div className="mb-8">
+          <p className="flex items-center text-sm text-gray-600">
+            {mangaData.media_type}
+            <p> &nbsp;·&nbsp; </p>
+            <div>{mangaData.status}</div>
+          </p>
+          <div className="mb-2 text-xl font-bold text-gray-900">Summary</div>
+          <div className="relative h-24 group-hover:h-40">
+            <p
+              className="mb-24 h-24 overflow-hidden pl-1 pr-1 text-base text-gray-700 group-hover:h-40 group-hover:overflow-x-visible group-hover:overflow-y-scroll"
+              style={{
+                position: "absolute",
+                width: "100%",
+                top: 0,
+                left: 0,
+                zIndex: 10,
+              }}
+            >
+              {mangaData.summary}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center">
+          <div className="text-sm">
+            <p className="leading-none text-gray-900">Jonathan Reinink</p>
+            <p className="text-gray-600">Aug 18</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 const Home: NextPage = () => {
   //comment
   //this is home page. Created user variable which is the useUser hook from clerk.
@@ -77,84 +129,10 @@ const Home: NextPage = () => {
         </main>
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
-        <div>
-          <table
-            style={{ borderCollapse: "collapse", border: "1px solid white" }}
-          >
-            <thead>
-              <tr>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Image
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Manga ID
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Title
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Mal Rating
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  Summary
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  media_type
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  status
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  author
-                </th>
-                <th style={{ border: "1px solid white", padding: "4px" }}>
-                  rank
-                </th>
-              </tr>
-            </thead>
-            <tbody className="row-gap">
-              {queryData.data.map((mangaData: MangaData, index: number) => (
-                <tr
-                  key={index}
-                  style={{ border: "1px solid white", padding: "4px" }}
-                >
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    <Image
-                      src={mangaData.imageUrl}
-                      alt={mangaData.title}
-                      width={150}
-                      height={300}
-                      style={{ maxWidth: "100%", maxHeight: "100%" }}
-                    />
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.mal_id}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.title}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.rating}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.summary}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.media_type}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.status}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.author}
-                  </td>
-                  <td style={{ border: "1px solid white", padding: "4px" }}>
-                    {mangaData.rank}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex h-full w-full items-center justify-center p-20">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {queryData.data.map((mangaData: MangaData) => uiCard(mangaData))}
+          </div>
         </div>
       )}
     </>
