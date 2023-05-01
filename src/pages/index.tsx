@@ -21,6 +21,15 @@ type MangaData = {
   summary: string;
 };
 export const uiCard = (mangaData: MangaData) => {
+  const isEmpty = (text: string): string => {
+    if (text == "") {
+      return "N/A";
+    }
+    return prettyText(text);
+  };
+  const prettyText = (text: string): string => {
+    return text.replace("_", " ");
+  };
   return (
     <div className="group flex h-64 w-full">
       {/* //image container */}
@@ -40,17 +49,18 @@ export const uiCard = (mangaData: MangaData) => {
           }}
         />
       </div>
+      {/* content container */}
       <div className="flex w-3/5 flex-col justify-between rounded-b border-r border-b border-l border-gray-400 bg-white p-4 leading-normal lg:rounded-b-none lg:rounded-r lg:border-l-0 lg:border-t lg:border-gray-400">
         <div className="mb-8">
           <p className="flex items-center text-sm text-gray-600">
-            {mangaData.media_type}
+            {isEmpty(mangaData.media_type)}
             <p> &nbsp;·&nbsp; </p>
-            <div>{mangaData.status}</div>
+            <div>{isEmpty(mangaData.status)}</div>
           </p>
           <div className="mb-2 text-xl font-bold text-gray-900">Summary</div>
-          <div className="relative h-24 group-hover:h-40">
+          <div className="relative h-24">
             <p
-              className="mb-24 h-24 overflow-hidden pl-1 pr-1 text-base text-gray-700 group-hover:h-40 group-hover:overflow-x-visible group-hover:overflow-y-scroll"
+              className="mb-24 h-24 overflow-hidden pl-1 pr-1 text-base text-gray-700 group-hover:h-24 group-hover:overflow-x-visible group-hover:overflow-y-scroll"
               style={{
                 position: "absolute",
                 width: "100%",
