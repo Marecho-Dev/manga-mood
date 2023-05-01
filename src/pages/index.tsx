@@ -124,6 +124,7 @@ const Home: NextPage = () => {
                       alt={mangaData.title}
                       width={150}
                       height={300}
+                      style={{ maxWidth: "100%", maxHeight: "100%" }}
                     />
                   </td>
                   <td style={{ border: "1px solid white", padding: "4px" }}>
