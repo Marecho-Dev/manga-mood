@@ -35,14 +35,14 @@ export const uiCard = (mangaData: MangaData) => {
   const genreArray = genreString.split(",");
   return (
     <div className="relative">
-      <div className="group flex w-full">
+      <div className="group flex h-full w-full">
         {/* Squares */}
         <div className="absolute top-0 right-0 mt-2 mr-2 space-y-1 text-right font-bold text-gray-600">
           <div className="h-5 w-10">#{mangaData.rank}</div>
           <div className="h-5 w-10">{mangaData.rating}</div>
         </div>
         {/* //image container */}
-        <div className="relative h-96 w-2/5 flex-none overflow-hidden rounded-t bg-cover text-center lg:rounded-t-none lg:rounded-l">
+        <div className="relative h-full w-2/5 flex-none overflow-hidden rounded-t bg-cover text-center lg:rounded-t-none lg:rounded-l">
           <Image
             src={mangaData.imageUrl}
             alt={mangaData.title}
@@ -64,7 +64,7 @@ export const uiCard = (mangaData: MangaData) => {
           </div>
         </div>
         {/* content container */}
-        <div className="flex w-3/5 flex-col justify-between rounded-b border-r border-b border-l border-gray-400 bg-white p-4 leading-normal lg:rounded-b-none lg:rounded-r lg:border-l-0 lg:border-t lg:border-gray-400">
+        <div className="flex h-full w-3/5 flex-col justify-between rounded-b border-r border-b border-l border-gray-400 bg-white p-4 leading-normal lg:rounded-b-none lg:rounded-r lg:border-l-0 lg:border-t lg:border-gray-400">
           <div className="mb-8">
             <p className="flex items-center text-sm text-gray-600">
               {isEmpty(mangaData.media_type)}
@@ -166,7 +166,7 @@ const Home: NextPage = () => {
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div className="flex flex-col items-center justify-center">
           <div className="flex h-full w-full items-center justify-center p-20">
-            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {queryData.data
                 .slice(0, cardsDisplayed)
                 .map((mangaData: MangaData) => uiCard(mangaData))}
