@@ -81,6 +81,7 @@ interface MangaRecommendation {
   rank: number;
   media_type: string;
   status: string;
+  genres: string;
 }
 
 async function mangaInsert(manga: Manga, ctx: Context) {

@@ -19,6 +19,7 @@ type MangaData = {
   author: string;
   status: string;
   summary: string;
+  genres: string;
 };
 export const uiCard = (mangaData: MangaData) => {
   const isEmpty = (text: string): string => {
@@ -30,6 +31,8 @@ export const uiCard = (mangaData: MangaData) => {
   const prettyText = (text: string): string => {
     return text.replace("_", " ");
   };
+  const genreString = mangaData.genres;
+  const genreArray = genreString.split(",");
   return (
     <div className="relative">
       <div className="group flex w-full">
@@ -84,12 +87,18 @@ export const uiCard = (mangaData: MangaData) => {
               </p>
             </div>
           </div>
-          <div className="flex items-center">
-            <div className="w-full text-sm">
-              <p className="leading-none text-gray-900">Jonathan Reinink</p>
-              <p className="text-gray-600">Aug 18</p>
-            </div>
+          {/* <div className="flex items-center"> */}
+          <div className="w-full text-sm text-gray-900">
+            {genreArray.map((genre: string) => (
+              <span
+                key={genre}
+                className="mr-2 mb-2 inline-block rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700"
+              >
+                {genre}
+              </span>
+            ))}
           </div>
+          {/* </div> */}
         </div>
       </div>
     </div>
