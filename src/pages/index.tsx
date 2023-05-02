@@ -155,7 +155,7 @@ const Home: NextPage = () => {
         </main>
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center justify-center">
           <div className="flex h-full w-full items-center justify-center p-20">
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {queryData.data
@@ -165,7 +165,7 @@ const Home: NextPage = () => {
           </div>
           <button
             onClick={loadMoreCards}
-            className="mt-4 w-1/3 justify-center rounded-md bg-blue-500 px-4 py-2 text-white"
+            className="mt-4 mb-5 w-1/3 items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white"
           >
             Load more
           </button>
