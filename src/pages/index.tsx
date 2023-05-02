@@ -100,6 +100,10 @@ const Home: NextPage = () => {
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
   // having the user to run the database code themselves
+  const [cardsDisplayed, setCardsDisplayed] = useState(30);
+  const loadMoreCards = () => {
+    setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 30);
+  };
 
   const [input, setInput] = useState<string>("");
   const [executeQuery, SetExectureQuery] = useState<boolean>(false);
@@ -151,10 +155,20 @@ const Home: NextPage = () => {
         </main>
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
-        <div className="flex h-full w-full items-center justify-center p-20">
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {queryData.data.map((mangaData: MangaData) => uiCard(mangaData))}
+        <div className="flex flex-col">
+          <div className="flex h-full w-full items-center justify-center p-20">
+            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {queryData.data
+                .slice(0, cardsDisplayed)
+                .map((mangaData: MangaData) => uiCard(mangaData))}
+            </div>
           </div>
+          <button
+            onClick={loadMoreCards}
+            className="mt-4 w-1/3 justify-center rounded-md bg-blue-500 px-4 py-2 text-white"
+          >
+            Load more
+          </button>
         </div>
       )}
     </>
