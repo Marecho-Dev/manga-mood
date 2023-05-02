@@ -26,6 +26,9 @@ export const uiCard = (mangaData: MangaData) => {
     if (text == "") {
       return "N/A";
     }
+    if (text == "currently_publishing") {
+      return "publishing";
+    }
     return prettyText(text);
   };
   const prettyText = (text: string): string => {
@@ -37,7 +40,7 @@ export const uiCard = (mangaData: MangaData) => {
     <div className="relative">
       <div className="group flex h-full w-full">
         {/* Squares */}
-        <div className="absolute top-0 right-0 mt-2 mr-2 space-y-1 text-right font-bold text-gray-600">
+        <div className="absolute top-0 right-0 mt-4 mr-2 space-y-1 text-right font-bold text-gray-600">
           <div className="h-5 w-10">#{mangaData.rank}</div>
           <div className="h-5 w-10">{mangaData.rating}</div>
         </div>
@@ -109,9 +112,9 @@ const Home: NextPage = () => {
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
   // having the user to run the database code themselves
-  const [cardsDisplayed, setCardsDisplayed] = useState(30);
+  const [cardsDisplayed, setCardsDisplayed] = useState(24);
   const loadMoreCards = () => {
-    setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 30);
+    setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 24);
   };
 
   const [input, setInput] = useState<string>("");
@@ -165,8 +168,11 @@ const Home: NextPage = () => {
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div className="flex flex-col items-center justify-center">
-          <div className="flex h-full w-full items-center justify-center p-20">
-            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          <div className="mt-20 flex w-full items-end justify-end px-20">
+            <div>function bar</div>
+          </div>
+          <div className="flex h-full w-full items-center justify-center px-1 md:px-20 py-5">
+            <div className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {queryData.data
                 .slice(0, cardsDisplayed)
                 .map((mangaData: MangaData) => uiCard(mangaData))}
