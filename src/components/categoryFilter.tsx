@@ -17,11 +17,6 @@ import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#' },
-  { name: 'Best Rating', href: '#' },
-  { name: 'Newest', href: '#' },
-]
 const filters = [
 
   {
@@ -44,15 +39,15 @@ const filters = [
   },
 ]
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export const CategoryFilter = () => {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-900">
       {/* Mobile filter dialog */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-40 sm:hidden" onClose={setOpen}>
@@ -80,10 +75,10 @@ export default function Example() {
             >
               <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl">
                 <div className="flex items-center justify-between px-4">
-                  <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                  <h2 className="text-lg font-medium text-slate-100">Filters</h2>
                   <button
                     type="button"
-                    className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-100 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onClick={() => setOpen(false)}
                   >
                     <span className="sr-only">Close menu</span>
@@ -139,31 +134,13 @@ export default function Example() {
           </div>
         </Dialog>
       </Transition.Root>
-
-      <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
-        <div className="py-24">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
-          <p className="mx-auto mt-4 max-w-3xl text-base text-gray-500">
-            Thoughtfully designed objects for the workspace, home, and travel.
-          </p>
-        </div>
-
-        <section aria-labelledby="filter-heading" className="border-t border-gray-200 py-6">
+        <section aria-labelledby="filter-heading" className=" py-6">
           <h2 id="filter-heading" className="sr-only">
-            Product filters
+            Manga Filters
           </h2>
 
           <div className="flex items-center justify-between">
             <Menu as="div" className="relative inline-block text-left">
-              <div>
-                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                  Sort
-                  <ChevronDownIcon
-                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                </Menu.Button>
-              </div>
 
               <Transition
                 as={Fragment}
@@ -174,31 +151,12 @@ export default function Example() {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="py-1">
-                    {sortOptions.map((option) => (
-                      <Menu.Item key={option}>
-                        {({ active }) => (
-                          <a
-                            href={option.href}
-                            className={classNames(
-                              active ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm font-medium text-gray-900'
-                            )}
-                          >
-                            {option.name}
-                          </a>
-                        )}
-                      </Menu.Item>
-                    ))}
-                  </div>
-                </Menu.Items>
               </Transition>
             </Menu>
 
             <button
               type="button"
-              className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden"
+              className="inline-block text-sm font-medium text-slate-100 hover:text-slate-200 sm:hidden"
               onClick={() => setOpen(true)}
             >
               Filters
@@ -213,13 +171,9 @@ export default function Example() {
                   className="relative inline-block text-left"
                 >
                   <div>
-                    <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-slate-100 hover:text-slate-200">
                       <span>{section.name}</span>
-                      {sectionIdx === 0 ? (
-                        <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
-                          1
-                        </span>
-                      ) : null}
+
                       <ChevronDownIcon
                         className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                         aria-hidden="true"
@@ -236,7 +190,7 @@ export default function Example() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Popover.Panel className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Popover.Panel className="absolute right-0 z-20 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <form className="space-y-4">
                         {section.options.map((option, optionIdx) => (
                           <div key={option.value} className="flex items-center">
@@ -264,6 +218,5 @@ export default function Example() {
           </div>
         </section>
       </div>
-    </div>
   )
 }

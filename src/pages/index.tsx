@@ -4,6 +4,7 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import { LoadingPage } from "~/components/loading";
+import {CategoryFilter} from "~/components/categoryFilter"
 //this is the home page
 
 type MangaData = {
@@ -169,7 +170,7 @@ const Home: NextPage = () => {
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div className="flex flex-col items-center justify-center">
           <div className="mt-20 flex w-full items-end justify-end px-20">
-            <div>function bar</div>
+            <div><CategoryFilter/></div>
           </div>
           <div className="flex h-full w-full items-center justify-center px-1 md:px-20 py-5">
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
