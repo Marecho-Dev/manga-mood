@@ -62,7 +62,7 @@ export const uiCard = (mangaData: MangaData) => {
             }}
           />
           {/* Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 flex min-h-[10%] flex-col items-start justify-center space-y-1 rounded-bl bg-black bg-opacity-75 p-5 text-sm text-white">
+          <div className="absolute bottom-0 left-0 right-0 flex min-h-[10%] flex-col items-start justify-center space-y-1 bg-black bg-opacity-75 p-5 text-sm text-white">
             <div className="text-left">{mangaData.title}</div>
             <div className="text-left">{isEmpty(mangaData.author)}</div>
           </div>
@@ -169,10 +169,10 @@ const Home: NextPage = () => {
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div className="flex flex-col items-center justify-center">
-          <div className="mt-20 flex w-full items-end justify-end px-20">
+          <div className="mt-5 md:mt-20 flex w-full items-end justify-end px-2 md:px-20">
             <div><CategoryFilter/></div>
           </div>
-          <div className="flex h-full w-full items-center justify-center px-1 md:px-20 py-5">
+          <div className="flex h-full w-full items-center justify-center px-2 md:px-20 py-5">
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {queryData.data
                 .slice(0, cardsDisplayed)
