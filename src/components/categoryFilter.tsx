@@ -39,12 +39,34 @@ const filters = [
   },
 ]
 
+
+type onApplyFilters = (filters: filter) => void;
+type filter = ({genres: string[],status: string[]});
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const CategoryFilter = () => {
+export const CategoryFilter = ({onApplyFilters}: {onApplyFilters: onApplyFilters}) => {
   const [open, setOpen] = useState(false)
+  const onFilterChange = (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const selectedFiltersArray: filter = {genres: [], status: [] };
+    filters.forEach((section) => {
+        section.options.forEach((option, optionIdx) => {
+          const inputElement = e.currentTarget.querySelector(`#filter-${section.id}-${optionIdx}`) ;
+          const isChecked = inputElement instanceof HTMLInputElement && inputElement.checked;
+          if (isChecked) {
+            if (section.id === "genres"){
+            selectedFiltersArray.genres.push(option.value);
+        }else if (section.id === "status"){
+            selectedFiltersArray.status.push(option.value);
+        }
+          }
+        });
+        
+    })
+    onApplyFilters(selectedFiltersArray)    
+    };
 
   return (
     <div className="bg-gray-900">
@@ -161,7 +183,7 @@ export const CategoryFilter = () => {
             >
               Filters
             </button>
-
+                                    
             <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
               {filters.map((section, sectionIdx) => (
                 <Popover
@@ -191,7 +213,7 @@ export const CategoryFilter = () => {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Popover.Panel className="absolute right-0 z-20 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <form className="space-y-4">
+                      <form className="space-y-4" onSubmit={onFilterChange}>
                         {section.options.map((option, optionIdx) => (
                           <div key={option.value} className="flex items-center">
                             <input
@@ -207,8 +229,13 @@ export const CategoryFilter = () => {
                             >
                               {option.label}
                             </label>
+                            
                           </div>
                         ))}
+                            <button
+                            type="submit"
+                            className="mt-4 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-500"
+                            >Apply</button>
                       </form>
                     </Popover.Panel>
                   </Transition>

@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import { LoadingPage } from "~/components/loading";
-import {CategoryFilter} from "~/components/categoryFilter"
+import { CategoryFilter } from "~/components/categoryFilter";
 //this is the home page
 
 type MangaData = {
@@ -22,6 +22,9 @@ type MangaData = {
   summary: string;
   genres: string;
 };
+
+type filter = { genres: string[]; status: string[] };
+
 export const uiCard = (mangaData: MangaData) => {
   const isEmpty = (text: string): string => {
     if (text == "") {
@@ -118,12 +121,43 @@ const Home: NextPage = () => {
     setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 24);
   };
 
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+
+  const [filteredData, setFilteredData] = useState<MangaData[]>([]);
+  const handleApplyFilters = (selectedFilters: filter) => {
+    console.log("Applied filters:", selectedFilters);
+
+    setSelectedGenres(selectedFilters.genres);
+    setSelectedStatus(selectedFilters.status);
+  };
   const [input, setInput] = useState<string>("");
   const [executeQuery, SetExectureQuery] = useState<boolean>(false);
   const queryData = api.user.getIdByUsername.useQuery(
     { username: input },
     { enabled: executeQuery }
   );
+
+  useEffect(() => {
+    if (queryData.isSuccess && isMangaDataArray(queryData.data)) {
+      if (selectedGenres.length === 0 && selectedStatus.length === 0) {
+        setFilteredData(queryData.data);
+      } else {
+        const filtered = queryData.data.filter((mangaData: MangaData) => {
+          const genreMatch =
+            selectedGenres.length === 0 ||
+            selectedGenres.some((genre) => mangaData.genres.includes(genre));
+          const statusMatch =
+            selectedStatus.length === 0 ||
+            selectedStatus.includes(mangaData.status);
+
+          return genreMatch && statusMatch;
+        });
+        setFilteredData(filtered);
+      }
+    }
+  }, [selectedGenres, selectedStatus, queryData.data, queryData.isSuccess]);
+
   console.log(queryData);
   function isMangaDataArray(data: unknown): data is MangaData[] {
     console.log(data);
@@ -169,12 +203,14 @@ const Home: NextPage = () => {
       )}
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div className="flex flex-col items-center justify-center">
-          <div className="mt-5 md:mt-20 flex w-full items-end justify-end px-2 md:px-20">
-            <div><CategoryFilter/></div>
+          <div className="mt-5 flex w-full items-end justify-end px-2 md:mt-20 md:px-20">
+            <div>
+              <CategoryFilter onApplyFilters={handleApplyFilters} />
+            </div>
           </div>
-          <div className="flex h-full w-full items-center justify-center px-2 md:px-20 py-5">
+          <div className="flex h-full w-full items-center justify-center px-2 py-5 md:px-20">
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-              {queryData.data
+              {filteredData
                 .slice(0, cardsDisplayed)
                 .map((mangaData: MangaData) => uiCard(mangaData))}
             </div>
