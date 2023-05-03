@@ -137,11 +137,21 @@ const Home: NextPage = () => {
     { username: input },
     { enabled: executeQuery }
   );
-
+  const [allGenres, setAllGenres] = useState<string[]>([]);
   useEffect(() => {
     if (queryData.isSuccess && isMangaDataArray(queryData.data)) {
       if (selectedGenres.length === 0 && selectedStatus.length === 0) {
         setFilteredData(queryData.data);
+        const allGenres: string[] = [];
+        queryData.data.forEach((mangaData: MangaData) => {
+          const genreArray = mangaData.genres.split(",");
+          genreArray.forEach((genre: string) => {
+            if (!allGenres.includes(genre.trim())) {
+              allGenres.push(genre.trim());
+            }
+          });
+        });
+        setAllGenres(allGenres);
       } else {
         const filtered = queryData.data.filter((mangaData: MangaData) => {
           const genreMatch =
@@ -157,7 +167,7 @@ const Home: NextPage = () => {
       }
     }
   }, [selectedGenres, selectedStatus, queryData.data, queryData.isSuccess]);
-
+  console.log(allGenres);
   console.log(queryData);
   function isMangaDataArray(data: unknown): data is MangaData[] {
     console.log(data);
@@ -205,7 +215,10 @@ const Home: NextPage = () => {
         <div className="flex flex-col items-center justify-center">
           <div className="mt-5 flex w-full items-end justify-end px-2 md:mt-20 md:px-20">
             <div>
-              <CategoryFilter onApplyFilters={handleApplyFilters} />
+              <CategoryFilter
+                allGenres={allGenres}
+                onApplyFilters={handleApplyFilters}
+              />
             </div>
           </div>
           <div className="flex h-full w-full items-center justify-center px-2 py-5 md:px-20">

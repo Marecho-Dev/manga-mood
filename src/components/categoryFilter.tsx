@@ -12,7 +12,7 @@
   }
   ```
 */
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Dialog,
   Disclosure,
@@ -36,11 +36,7 @@ const filters = [
   {
     id: "genres",
     name: "genres",
-    options: [
-      { value: "Action", label: "Action" },
-      { value: "Comedy", label: "Comedy" },
-      { value: "Drama", label: "Drama" },
-    ],
+    options: [],
   },
 ];
 
@@ -52,14 +48,28 @@ function classNames(...classes: string[]) {
 
 export const CategoryFilter = ({
   onApplyFilters,
+  allGenres,
 }: {
   onApplyFilters: onApplyFilters;
+  allGenres: string[];
 }) => {
   const [open, setOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<filter>({
     genres: [],
     status: [],
   });
+
+  useEffect(() => {
+    const genresFilter = filters.find((f) => f.id === "genres");
+    if (genresFilter) {
+      const options = allGenres.map((genre) => ({
+        value: genre,
+        label: genre,
+      }));
+      genresFilter.options = options;
+    }
+  }, [allGenres]);
+
   const onFilterChange = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updatedFilters = { ...selectedFilters };
@@ -240,30 +250,48 @@ export const CategoryFilter = ({
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Popover.Panel className="absolute right-0 z-20 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <form className="space-y-4" onSubmit={onFilterChange}>
-                      {section.options.map((option, optionIdx) => (
-                        <div key={option.value} className="flex items-center">
-                          <input
-                            id={`filter-${section.id}-${optionIdx}`}
-                            name={`${section.id}[]`}
-                            defaultValue={option.value}
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                          <label
-                            htmlFor={`filter-${section.id}-${optionIdx}`}
-                            className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-gray-900"
+                    <form
+                      className="grid h-full w-full grid-rows-[auto,1fr] gap-5"
+                      onSubmit={onFilterChange}
+                    >
+                      <div className="min-w-[min-content]">
+                        <div className="flex gap-2">
+                          <button
+                            type="submit"
+                            className="mt-1  rounded bg-indigo-600 px-5 py-1 text-sm font-medium text-white hover:bg-indigo-500"
                           >
-                            {option.label}
-                          </label>
+                            Apply
+                          </button>
+                          <button
+                            type="submit"
+                            className="mt-1  rounded bg-red-600 px-5 py-1 text-sm font-medium text-white hover:bg-red-500"
+                          >
+                            Clear
+                          </button>
                         </div>
-                      ))}
-                      <button
-                        type="submit"
-                        className="mt-4 rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
-                      >
-                        Apply
-                      </button>
+                        <div className="max-h-40 w-full min-w-full overflow-y-auto">
+                          {section.options.map((option, optionIdx) => (
+                            <div
+                              key={option.value}
+                              className="flex items-center"
+                            >
+                              <input
+                                id={`filter-${section.id}-${optionIdx}`}
+                                name={`${section.id}[]`}
+                                defaultValue={option.value}
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                              <label
+                                htmlFor={`filter-${section.id}-${optionIdx}`}
+                                className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-gray-900"
+                              >
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </form>
                   </Popover.Panel>
                 </Transition>
