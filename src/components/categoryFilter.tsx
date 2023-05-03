@@ -45,7 +45,7 @@ const filters = [
 ];
 
 type onApplyFilters = (filters: filter) => void;
-type filter = { genres: string[]; status: string[] };
+type filter = { genres: string[]; status: string[]; [key: string]: string[] };
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -56,9 +56,13 @@ export const CategoryFilter = ({
   onApplyFilters: onApplyFilters;
 }) => {
   const [open, setOpen] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState<filter>({
+    genres: [],
+    status: [],
+  });
   const onFilterChange = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const selectedFiltersArray: filter = { genres: [], status: [] };
+    const updatedFilters = { ...selectedFilters };
     filters.forEach((section) => {
       section.options.forEach((option, optionIdx) => {
         const inputElement = e.currentTarget.querySelector(
@@ -68,14 +72,15 @@ export const CategoryFilter = ({
           inputElement instanceof HTMLInputElement && inputElement.checked;
         if (isChecked) {
           if (section.id === "genres") {
-            selectedFiltersArray.genres.push(option.value);
+            updatedFilters[section.id].push(option.value);
           } else if (section.id === "status") {
-            selectedFiltersArray.status.push(option.value);
+            updatedFilters[section.id].push(option.value);
           }
         }
       });
     });
-    onApplyFilters(selectedFiltersArray);
+    setSelectedFilters(updatedFilters);
+    onApplyFilters(selectedFilters);
   };
 
   return (
