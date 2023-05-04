@@ -3,7 +3,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 import type { AxiosError } from "axios";
-import type { PrismaClient, User, Manga } from "@prisma/client";
+import type { PrismaClient, User, Manga, MangaList } from "@prisma/client";
 
 //publicProcedure method to generate a function that your client calls
 //publicProcedure is a procedure that anyone can call without being authenticated, cause we want anyone to have access to the post
@@ -55,8 +55,12 @@ interface MangaNode {
   };
 }
 
+interface listStatusNode {
+  score: number;
+}
 interface MangaDataItem {
   node: MangaNode;
+  list_status: listStatusNode;
   ranking: {
     rank: number;
   };
@@ -98,6 +102,23 @@ async function mangaInsert(manga: Manga, ctx: Context) {
         rank: manga.rank,
         media_type: manga.media_type,
         status: manga.status,
+      },
+    });
+    return "success";
+  } catch (error) {
+    return "failure";
+  }
+}
+
+async function mangaListInsert(mangaListing: MangaList, ctx: Context) {
+  // console.log(`calling manga insert on`);
+  // console.log(manga);
+  try {
+    await ctx.prisma.mangaList.create({
+      data: {
+        user_id: mangaListing.user_id,
+        manga_id: mangaListing.manga_id,
+        rating: mangaListing.rating,
       },
     });
     return "success";
@@ -183,7 +204,12 @@ async function findMangaById(
   return manga;
 }
 
-const userMangaListSearch = async (username: string, ctx: Context) => {
+const userMangaListSearch = async (
+  user: User[],
+  username: string,
+  ctx: Context
+) => {
+  console.log("we are in userMangaListSearch");
   const tokenInfo = process.env.NEXT_PUBLIC_MAL_API_ACCESS_TOKEN;
   //setting up axios request
   const headers = {
@@ -205,7 +231,10 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
       }
     );
     //looping through the axios return which is a list of mangas
+    console.log("looping through each manga in their list");
     for (const manga of response.data.data) {
+      console.log(user[0]?.id);
+      console.log(manga);
       const exists = await findMangaById(manga.node.id, ctx);
       //if manga doesn't exist in our planetscale DB, do a mal api request and then insert manga into the db.
       if (exists === null) {
@@ -228,15 +257,28 @@ const userMangaListSearch = async (username: string, ctx: Context) => {
             ctx
           );
         }
-
-        //-------------------- commenting this piece out for now. genre table needs to be updated as it's causing some issues. --------------------
-        // const genreDbInsert = await genreInsert(
-        //   mangaMal.id,
-        //   mangaMal.genres,
-        //   ctx
-        // );
       }
+      console.log(user[0]?.id);
+      if (user[0]?.id) {
+        console.log("about to call mangaListInsert");
+        await mangaListInsert(
+          {
+            user_id: user[0].id,
+            manga_id: manga.node.id,
+            rating: manga.list_status.score,
+          },
+          ctx
+        );
+      }
+
+      //-------------------- commenting this piece out for now. genre table needs to be updated as it's causing some issues. --------------------
+      // const genreDbInsert = await genreInsert(
+      //   mangaMal.id,
+      //   mangaMal.genres,
+      //   ctx
+      // );
     }
+    return recommendationApiCall(user[0]?.id || 0);
   } catch (error) {
     // console.log(error);
   }
@@ -264,6 +306,7 @@ const recommendationApiCall = async (
   }
 };
 const malUsernameSearch = async (username: string): Promise<string> => {
+  console.log("checking if username exists on myanimelist");
   try {
     await axios.get(`https://myanimelist.net/profile/${username}`);
     return "success";
@@ -282,14 +325,18 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
   // console.log(user[0]?.username);
   if (Object.keys(user).length === 0) {
     try {
+      console.log("user is null - checking if the name exists on myanimelist");
       const queryResponse = await malUsernameSearch(username);
+      let newUser: User | undefined;
       if (queryResponse === "success")
-        await ctx.prisma.user.create({
+        newUser = await ctx.prisma.user.create({
           data: {
             username: username,
           },
         });
-      return userMangaListSearch(username, ctx);
+      console.log("creating user in our db");
+      console.log("going to search for user manga list now");
+      return userMangaListSearch(newUser ? [newUser] : [], username, ctx);
     } catch (error) {
       return "failure";
     }
