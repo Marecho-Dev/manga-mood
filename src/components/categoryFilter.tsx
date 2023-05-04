@@ -29,8 +29,8 @@ const filters = [
     name: "status",
     options: [
       { value: "finished", label: "finished" },
-      { value: "on hiatus", label: "on hiatus" },
-      { value: "publishing", label: "publishing" },
+      { value: "on_hiatus", label: "on_hiatus" },
+      { value: "currently_publishing", label: "currently_publishing" },
     ],
   },
   {
@@ -49,14 +49,16 @@ function classNames(...classes: string[]) {
 export const CategoryFilter = ({
   onApplyFilters,
   allGenres,
+  currentFilters,
 }: {
   onApplyFilters: onApplyFilters;
   allGenres: string[];
+  currentFilters: filter;
 }) => {
   const [open, setOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<filter>({
-    genres: [],
-    status: [],
+    genres: currentFilters.genres,
+    status: currentFilters.status,
   });
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export const CategoryFilter = ({
 
   const onFilterChange = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedFilters = { ...selectedFilters };
+    const updatedFilters: filter = { genres: [], status: [] };
     filters.forEach((section) => {
       section.options.forEach((option, optionIdx) => {
         const inputElement = e.currentTarget.querySelector(
@@ -92,7 +94,25 @@ export const CategoryFilter = ({
     setSelectedFilters(updatedFilters);
     onApplyFilters(selectedFilters);
   };
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    sectionId: string,
+    optionValue: string
+  ) => {
+    const isChecked = e.target.checked;
 
+    const updatedFilters = { ...selectedFilters };
+    if (isChecked) {
+      updatedFilters[sectionId]?.push(optionValue);
+    } else {
+      if (updatedFilters[sectionId] as string[]) {
+        updatedFilters[sectionId] = (
+          updatedFilters[sectionId] as string[]
+        ).filter((value) => value !== optionValue);
+      }
+    }
+    setSelectedFilters(updatedFilters);
+  };
   return (
     <div className="bg-gray-900">
       {/* Mobile filter dialog */}
@@ -171,8 +191,19 @@ export const CategoryFilter = ({
                                   <input
                                     id={`filter-mobile-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
-                                    defaultValue={option.value}
                                     type="checkbox"
+                                    checked={
+                                      selectedFilters[section.id]?.includes(
+                                        option.value
+                                      ) || false
+                                    }
+                                    onChange={(e) =>
+                                      handleCheckboxChange(
+                                        e,
+                                        section.id,
+                                        option.value
+                                      )
+                                    }
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label
@@ -278,8 +309,19 @@ export const CategoryFilter = ({
                               <input
                                 id={`filter-${section.id}-${optionIdx}`}
                                 name={`${section.id}[]`}
-                                defaultValue={option.value}
                                 type="checkbox"
+                                checked={
+                                  selectedFilters[section.id]?.includes(
+                                    option.value
+                                  ) || false
+                                }
+                                onChange={(e) =>
+                                  handleCheckboxChange(
+                                    e,
+                                    section.id,
+                                    option.value
+                                  )
+                                }
                                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                               />
                               <label

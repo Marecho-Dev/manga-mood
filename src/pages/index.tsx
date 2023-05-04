@@ -121,15 +121,16 @@ const Home: NextPage = () => {
     setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 24);
   };
 
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<filter>({
+    genres: [],
+    status: [],
+  });
 
   const [filteredData, setFilteredData] = useState<MangaData[]>([]);
   const handleApplyFilters = (selectedFilters: filter) => {
     console.log("Applied filters:", selectedFilters);
-
-    setSelectedGenres(selectedFilters.genres);
-    setSelectedStatus(selectedFilters.status);
+    const updatedFilters = { ...selectedFilters };
+    setSelectedFilters(updatedFilters);
   };
   const [input, setInput] = useState<string>("");
   const [executeQuery, SetExectureQuery] = useState<boolean>(false);
@@ -140,7 +141,10 @@ const Home: NextPage = () => {
   const [allGenres, setAllGenres] = useState<string[]>([]);
   useEffect(() => {
     if (queryData.isSuccess && isMangaDataArray(queryData.data)) {
-      if (selectedGenres.length === 0 && selectedStatus.length === 0) {
+      if (
+        selectedFilters.genres.length === 0 &&
+        selectedFilters.status.length === 0
+      ) {
         setFilteredData(queryData.data);
         const allGenres: string[] = [];
         queryData.data.forEach((mangaData: MangaData) => {
@@ -152,25 +156,33 @@ const Home: NextPage = () => {
           });
         });
         setAllGenres(allGenres);
+        console.log(allGenres);
       } else {
         const filtered = queryData.data.filter((mangaData: MangaData) => {
           const genreMatch =
-            selectedGenres.length === 0 ||
-            selectedGenres.some((genre) => mangaData.genres.includes(genre));
+            selectedFilters.genres.length === 0 ||
+            selectedFilters.genres.every((genre) =>
+              mangaData.genres.includes(genre)
+            );
           const statusMatch =
-            selectedStatus.length === 0 ||
-            selectedStatus.includes(mangaData.status);
+            selectedFilters.status.length === 0 ||
+            selectedFilters.status.includes(mangaData.status);
 
           return genreMatch && statusMatch;
         });
         setFilteredData(filtered);
       }
     }
-  }, [selectedGenres, selectedStatus, queryData.data, queryData.isSuccess]);
+  }, [
+    selectedFilters.genres,
+    selectedFilters.status,
+    queryData.data,
+    queryData.isSuccess,
+  ]);
   console.log(allGenres);
-  console.log(queryData);
+  // console.log(queryData);
   function isMangaDataArray(data: unknown): data is MangaData[] {
-    console.log(data);
+    // console.log(data);
     return (
       Array.isArray(data) &&
       data.every((item) => typeof item === "object" && "mal_id" in item)
@@ -180,7 +192,7 @@ const Home: NextPage = () => {
   if (!queryData.isSuccess && queryData.isLoading && queryData.isFetching)
     return <LoadingPage />;
   if (queryData.isSuccess) {
-    console.log(queryData);
+    // console.log(queryData);
   }
   return (
     <>
@@ -203,7 +215,7 @@ const Home: NextPage = () => {
                   e.preventDefault();
                   if (input !== "") {
                     SetExectureQuery(true);
-                    console.log(queryData);
+                    // console.log(queryData);
                   }
                 }
               }}
@@ -218,6 +230,7 @@ const Home: NextPage = () => {
               <CategoryFilter
                 allGenres={allGenres}
                 onApplyFilters={handleApplyFilters}
+                currentFilters={selectedFilters}
               />
             </div>
           </div>
@@ -230,7 +243,12 @@ const Home: NextPage = () => {
           </div>
           <button
             onClick={loadMoreCards}
-            className="mt-4 mb-5 w-1/3 items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white"
+            disabled={cardsDisplayed >= filteredData.length}
+            className={`mt-4 mb-5 w-1/3 items-center justify-center rounded-md ${
+              cardsDisplayed >= filteredData.length
+                ? "text-gray- bg-gray-500"
+                : "bg-blue-500"
+            } px-4 py-2 text-white`}
           >
             Load more
           </button>
