@@ -64,7 +64,8 @@ export const CategoryFilter = ({
   useEffect(() => {
     const genresFilter = filters.find((f) => f.id === "genres");
     if (genresFilter) {
-      const options = allGenres.map((genre) => ({
+      const sortedGenres = [...allGenres].sort();
+      const options = sortedGenres.map((genre) => ({
         value: genre,
         label: genre,
       }));
