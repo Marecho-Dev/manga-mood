@@ -36,7 +36,7 @@ const Home: NextPage = () => {
   const loadMoreCards = () => {
     setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 24);
   };
-
+  //test comment
   //These control the filters being recieved from the filter dropdown. selectedFilters used in our mapping when displaying content cards.
   const [selectedFilters, setSelectedFilters] = useState<filter>({
     genres: [],
