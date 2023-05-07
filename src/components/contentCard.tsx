@@ -34,7 +34,7 @@ export const ContentCard = (mangaData: MangaData) => {
   const genreArray = genreString.split(",");
   return (
     <div className="relative">
-      <div className="group flex h-full w-full">
+      <div className="flex h-full w-full">
         {/* Squares */}
         <div className="absolute top-0 right-0 mt-4 mr-2 space-y-1 text-right font-bold text-gray-600">
           <div className="h-5 w-10">#{mangaData.rank}</div>
@@ -73,7 +73,7 @@ export const ContentCard = (mangaData: MangaData) => {
             <div className="mb-2 text-xl font-bold text-gray-900">
               {mangaData.title}
             </div>
-            <div className="relative h-56">
+            <div className="group relative h-56">
               <p
                 className="h-56 overflow-hidden pr-2 pl-1 text-xs text-gray-700 group-hover:h-56 group-hover:overflow-x-visible group-hover:overflow-y-scroll group-hover:pr-1 group-hover:pl-1"
                 style={{
