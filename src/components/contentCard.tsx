@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { AiOutlineLink } from "react-icons/ai";
 //this is the home page
 
 type MangaData = {
@@ -100,6 +101,14 @@ export const ContentCard = (mangaData: MangaData) => {
             ))}
           </div>
           {/* </div> */}
+          <a
+            href={`https://myanimelist.net/manga/${mangaData.mal_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-2 right-2 text-black"
+          >
+            <AiOutlineLink size={24} />
+          </a>
         </div>
       </div>
     </div>
