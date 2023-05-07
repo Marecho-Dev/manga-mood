@@ -29,23 +29,27 @@ const Home: NextPage = () => {
   //comment
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
-  // having the user to run the database code themselves
+
+  //state to control how many cards are being displayed on the screen. Eventually should have the option to change how many you want to display at one.
+  //for now default behavior is loading 24 more cards. Eventually user will be able to determine how many cards are being displayed.
   const [cardsDisplayed, setCardsDisplayed] = useState(24);
   const loadMoreCards = () => {
     setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 24);
   };
 
+  //These control the filters being recieved from the filter dropdown. selectedFilters used in our mapping when displaying content cards.
   const [selectedFilters, setSelectedFilters] = useState<filter>({
     genres: [],
     status: [],
   });
-
   const [filteredData, setFilteredData] = useState<MangaData[]>([]);
   const handleApplyFilters = (selectedFilters: filter) => {
     console.log("Applied filters:", selectedFilters);
     const updatedFilters = { ...selectedFilters };
     setSelectedFilters(updatedFilters);
   };
+
+  //controls the username being input via the first page.
   const [input, setInput] = useState<string>("");
   const [executeQuery, SetExectureQuery] = useState<boolean>(false);
   const queryData = api.user.getIdByUsername.useQuery(

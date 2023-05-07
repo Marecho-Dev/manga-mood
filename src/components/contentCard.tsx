@@ -70,10 +70,12 @@ export const ContentCard = (mangaData: MangaData) => {
               <p> &nbsp;·&nbsp; </p>
               <div>{isEmpty(mangaData.status)}</div>
             </p>
-            <div className="mb-2 text-xl font-bold text-gray-900">Summary</div>
+            <div className="mb-2 text-xl font-bold text-gray-900">
+              {mangaData.title}
+            </div>
             <div className="relative h-56">
               <p
-                className="h-56 overflow-hidden pl-1 pr-1 text-xs text-gray-700 group-hover:h-56 group-hover:overflow-x-visible group-hover:overflow-y-scroll"
+                className="h-56 overflow-hidden pr-2 pl-1 text-xs text-gray-700 group-hover:h-56 group-hover:overflow-x-visible group-hover:overflow-y-scroll group-hover:pr-1 group-hover:pl-1"
                 style={{
                   position: "absolute",
                   width: "100%",
