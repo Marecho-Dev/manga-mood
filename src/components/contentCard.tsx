@@ -71,7 +71,7 @@ export const ContentCard = (mangaData: MangaData) => {
               <p> &nbsp;·&nbsp; </p>
               <div>{isEmpty(mangaData.status)}</div>
             </p>
-            <div className="mb-2 text-xl font-bold text-gray-900">
+            <div className="text-l mb-2 pr-10 font-bold text-gray-900">
               {mangaData.title}
             </div>
             <div className="group relative h-56">
