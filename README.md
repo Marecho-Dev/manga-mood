@@ -8,6 +8,6 @@ After burning through an epic manga series, the looming question for fans has al
 
 Take "Berserk" as a case in point. Some dig it for its art, others for its admirable character development, and some just can't get enough of the hyper-violent action scenes. Now, imagine going to MAL and seeing "Claymore" recommended just because both have "action-packed sword fights." Feels off, right?
 
-Enter Manga Mood. The big idea? If you vibe with someone's manga picks, chances are you'll like their other favorites too, regardless of genre. Picture this: recommendations sourced from users who think and rate like you.
+Enter Manga Mood. The big idea? If you're vibing with someone's manga choices, there's a solid chance you'll dig their other faves, no matter the genre.
 
-Bottom line? Manga Mood isn't just another site—it's a smarter way to discover. Instead of suggesting something just because it's another shonen, or it's another isekai, it matches vibes over surface-level themes. Manga Mood connects you with titles based on shared tastes with other readers. So, if you're vibing with someone's manga choices, there's a solid chance you'll dig their other faves, no matter the genre.
+Bottom line? Manga Mood isn't just another site—it's a smarter way to discover. Dive in and find what resonates with you.
