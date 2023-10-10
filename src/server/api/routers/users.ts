@@ -210,6 +210,7 @@ const userMangaListSearch = async (
   ctx: Context
 ) => {
   console.log("we are in userMangaListSearch");
+  console.log(user);
   const tokenInfo = process.env.NEXT_PUBLIC_MAL_API_ACCESS_TOKEN;
   //setting up axios request
   const headers = {
@@ -281,6 +282,7 @@ const userMangaListSearch = async (
       //   ctx
       // );
     }
+    console.log(user[0]?.id);
     return recommendationApiCall(user[0]?.id || 0);
   } catch (error) {
     // console.log(error);
@@ -328,7 +330,9 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
   // console.log(user[0]?.username);
   if (Object.keys(user).length === 0) {
     try {
-      console.log("user is null - checking if the name exists on myanimelist");
+      console.log(
+        "user is null in our db - checking if the name exists on MAL"
+      );
       const queryResponse = await malUsernameSearch(username);
       let newUser: User | undefined;
       if (queryResponse === "success")
@@ -339,14 +343,14 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
         });
       console.log("creating user in our db");
       console.log("going to search for user manga list now");
+
       return userMangaListSearch(newUser ? [newUser] : [], username, ctx);
     } catch (error) {
       return "failure";
     }
   } else {
     // return recommendationApiCall(user[0]?.id || 0); //default value, theoretically this should never be hit.
-    let newUser: User | undefined;
-    return userMangaListSearch(newUser ? [newUser] : [], username, ctx);
+    return userMangaListSearch(user, username, ctx);
   }
 };
 
@@ -360,7 +364,7 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.prisma.user.findMany({
         where: { username: input.username },
       });
-      // console.log(user);
+      console.log(user);
       return isUserNull(user, input.username, ctx);
     }),
 
