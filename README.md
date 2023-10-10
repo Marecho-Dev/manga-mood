@@ -1,28 +1,13 @@
-# Create T3 App
+#Manga Mood
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+## What's the purpose of this app?
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+After burning through an epic manga series, the looming question for fans has always been: what’s next? The old-school method? Hitting up forums like MAL and scrolling through endless fan suggestions. But honestly, that's a shot in the dark.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Take "Berserk" as a case in point. Some dig it for its art, others for its admirable character development, and some just can't get enough of the hyper-violent action scenes. Now, imagine going to MAL and seeing "Claymore" recommended just because both have "action-packed sword fights." Feels off, right?
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Enter Manga Mood. The big idea? If you vibe with someone's manga picks, chances are you'll like their other favorites too, regardless of genre. Picture this: recommendations sourced from users who think and rate like you.
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Bottom line? Manga Mood isn't just another site—it's a smarter way to discover. Instead of suggesting something just because it's another shonen, or it's another isekai, it matches vibes over surface-level themes. Manga Mood connects you with titles based on shared tastes with other readers. So, if you're vibing with someone's manga choices, there's a solid chance you'll dig their other faves, no matter the genre.

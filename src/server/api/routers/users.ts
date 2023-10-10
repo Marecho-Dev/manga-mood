@@ -175,7 +175,7 @@ const malMangaSearch = async (mangaId: number) => {
 
   const params = {
     fields:
-      "id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,status,genres,media_type,my_list_status",
+      "id,title,main_picture,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,authors,status,genres,media_type,my_list_status",
   };
   try {
     const response: AxiosResponse<ApiResponse> = await axios.get(
@@ -220,6 +220,7 @@ const userMangaListSearch = async (
   const params = {
     fields: "list_status",
     limit: "1000",
+    nsfw: "true",
     // 'offset': '5'
   };
   try {
@@ -233,12 +234,14 @@ const userMangaListSearch = async (
     //looping through the axios return which is a list of mangas
     console.log("looping through each manga in their list");
     for (const manga of response.data.data) {
-      console.log(user[0]?.id);
-      console.log(manga);
+      // console.log(user[0]?.id);
+      // console.log(manga);
       const exists = await findMangaById(manga.node.id, ctx);
       //if manga doesn't exist in our planetscale DB, do a mal api request and then insert manga into the db.
       if (exists === null) {
+        console.log("manga doesnt exist");
         const mangaMal = await malMangaSearch(manga.node.id);
+        console.log(mangaMal);
         let score = 0;
         if (mangaMal != "failure" && "mean" in mangaMal) {
           score = mangaMal.mean;
@@ -258,9 +261,9 @@ const userMangaListSearch = async (
           );
         }
       }
-      console.log(user[0]?.id);
+      // console.log(user[0]?.id);
       if (user[0]?.id) {
-        console.log("about to call mangaListInsert");
+        // console.log("about to call mangaListInsert");
         await mangaListInsert(
           {
             user_id: user[0].id,
@@ -298,7 +301,7 @@ const recommendationApiCall = async (
       );
     // console.log(recommendations);
     console.log("calling recommendations");
-    console.log(recommendations);
+    // console.log(recommendations);
     return recommendations.data;
   } catch (error) {
     console.log("caught error");
@@ -320,7 +323,7 @@ const malUsernameSearch = async (username: string): Promise<string> => {
 };
 
 const isUserNull = async (user: User[], username: string, ctx: Context) => {
-  console.log(user);
+  // console.log(user);
   console.log(username);
   // console.log(user[0]?.username);
   if (Object.keys(user).length === 0) {
@@ -341,7 +344,9 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
       return "failure";
     }
   } else {
-    return recommendationApiCall(user[0]?.id || 0); //default value, theoretically this should never be hit.
+    // return recommendationApiCall(user[0]?.id || 0); //default value, theoretically this should never be hit.
+    let newUser: User | undefined;
+    return userMangaListSearch(newUser ? [newUser] : [], username, ctx);
   }
 };
 
@@ -355,7 +360,7 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.prisma.user.findMany({
         where: { username: input.username },
       });
-      console.log(user);
+      // console.log(user);
       return isUserNull(user, input.username, ctx);
     }),
 
