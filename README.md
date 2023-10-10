@@ -4,7 +4,7 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 
 ## What's the purpose of this app?
 
-After burning through an epic manga series, the looming question for fans has always been: what’s next? The old-school method? Hitting up forums like MAL and scrolling through endless fan suggestions. But honestly, that's a shot in the dark.
+Manga mood has been a long time want, and current passion project of mine. Remember those days when burning through an epic manga series, the looming question for me and fans alike has always been: what’s next? The old-school method? Hitting up forums like MAL and scrolling through endless fan suggestions. But honestly, that's a shot in the dark.
 
 Take "Berserk" as a case in point. Some dig it for its art, others for its admirable character development, and some just can't get enough of the hyper-violent action scenes. Now, imagine going to MAL and seeing "Claymore" recommended just because both have "action-packed sword fights." Feels off, right?
 
