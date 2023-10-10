@@ -350,7 +350,7 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
     }
   } else {
     // return recommendationApiCall(user[0]?.id || 0); //default value, theoretically this should never be hit.
-    return userMangaListSearch(user, username, ctx);
+    return recommendationApiCall(user[0]?.id || 0);
   }
 };
 
