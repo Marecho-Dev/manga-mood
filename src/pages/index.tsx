@@ -121,9 +121,9 @@ const Home: NextPage = () => {
       </Head>
       {!queryData.isSuccess && !queryData.isError && (
         <main className="flex h-screen items-center justify-center">
-          <div className="h-24 w-full rounded-md bg-gray-700 md:max-w-2xl">
+          <div className="flex h-24 w-full items-center rounded-md bg-gray-700 md:max-w-2xl">
             <input
-              placeholder=">MAL Username"
+              placeholder=">Enter your MAL Username (e.g. Marecho)"
               className="justify-centerborder-none flex h-full w-full items-center bg-transparent p-2 text-xl text-gray-300 focus:outline-none"
               type="text"
               value={input}
@@ -138,6 +138,30 @@ const Home: NextPage = () => {
                 }
               }}
             />
+            <button
+              className="flex items-center rounded-full p-5 "
+              onClick={() => {
+                if (input !== "") {
+                  SetExectureQuery(true);
+                  // You can also add other actions here.
+                }
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1}
+                stroke="currentColor"
+                className="h-12 w-12 hover:stroke-gray-300"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </button>
           </div>
         </main>
       )}
@@ -164,7 +188,7 @@ const Home: NextPage = () => {
           <button
             onClick={loadMoreCards}
             disabled={cardsDisplayed >= filteredData.length}
-            className={`mt-4 mb-5 w-1/3 items-center justify-center rounded-md ${
+            className={`mb-5 mt-4 w-1/3 items-center justify-center rounded-md ${
               cardsDisplayed >= filteredData.length
                 ? "text-gray- bg-gray-500"
                 : "bg-blue-500"
