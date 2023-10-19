@@ -244,7 +244,9 @@ const Home: NextPage = () => {
                 : "bg-blue-500"
             } px-4 py-2 text-white`}
           >
-            Load more
+            {cardsDisplayed >= filteredData.length
+              ? "Nothing left to load"
+              : "Load more"}
           </button>
         </div>
       )}
