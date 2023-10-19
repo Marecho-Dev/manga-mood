@@ -59,6 +59,7 @@ const Home: NextPage = () => {
     { username: input },
     {
       enabled: executeQuery,
+      //onSuccess to invalidate data if data is = "Not Found". This means invalid username and we want to remove our query from the cache and "reset".
       onSuccess: (data) => {
         // Invalidate the query after it returns success
         const queryKey = getQueryKey(
@@ -68,6 +69,7 @@ const Home: NextPage = () => {
         );
         if (data === "Not Found") {
           queryClient.removeQueries(queryKey);
+          //this is to keep track of invalid usernames when "reset"
           setIsValidUsername(false);
           SetExectureQuery(false);
           setInput("");
