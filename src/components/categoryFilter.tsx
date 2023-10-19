@@ -114,6 +114,7 @@ export const CategoryFilter = ({
     }
     setSelectedFilters(updatedFilters);
   };
+
   return (
     <div className="bg-gray-900">
       {/* Mobile filter dialog */}

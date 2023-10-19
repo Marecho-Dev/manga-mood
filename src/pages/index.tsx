@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/loading";
 import { CategoryFilter } from "~/components/categoryFilter";
@@ -29,17 +29,15 @@ type filter = { genres: string[]; status: string[] };
 
 const Home: NextPage = () => {
   const queryClient = useQueryClient();
-  //comment
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
-
-  //state to control how many cards are being displayed on the screen. Eventually should have the option to change how many you want to display at one.
+  //state to control how many cards are being displayed on the screen. Eventually should have the option to change how many you want to display at once.
   //for now default behavior is loading 24 more cards. Eventually user will be able to determine how many cards are being displayed.
   const [cardsDisplayed, setCardsDisplayed] = useState(24);
   const loadMoreCards = () => {
     setCardsDisplayed((prevCardsDisplayed) => prevCardsDisplayed + 24);
   };
-  //test comment
+
   //These control the filters being recieved from the filter dropdown. selectedFilters used in our mapping when displaying content cards.
   const [selectedFilters, setSelectedFilters] = useState<filter>({
     genres: [],
@@ -50,6 +48,7 @@ const Home: NextPage = () => {
     console.log("Applied filters:", selectedFilters);
     const updatedFilters = { ...selectedFilters };
     setSelectedFilters(updatedFilters);
+    updateFilteredData(updatedFilters);
   };
 
   //controls the username being input via the first page.
@@ -77,25 +76,47 @@ const Home: NextPage = () => {
       },
     }
   );
+  const updateFilteredData = useCallback(
+    (filters: filter) => {
+      if (queryData.isSuccess && isMangaDataArray(queryData.data)) {
+        if (filters.genres.length === 0 && filters.status.length === 0) {
+          // rest of the logic remains the same...
+        } else {
+          const filtered = queryData.data.filter((mangaData: MangaData) => {
+            const genreMatch =
+              filters.genres.length === 0 ||
+              filters.genres.every((genre) => mangaData.genres.includes(genre));
+            const statusMatch =
+              filters.status.length === 0 ||
+              filters.status.includes(mangaData.status);
+
+            return genreMatch && statusMatch;
+          });
+          setFilteredData(filtered);
+        }
+      }
+    },
+    [queryData.data, queryData.isSuccess]
+  );
   const [allGenres, setAllGenres] = useState<string[]>([]);
   useEffect(() => {
     if (queryData.isSuccess && isMangaDataArray(queryData.data)) {
+      const genreSet: Set<string> = new Set();
+
+      queryData.data.forEach((mangaData: MangaData) => {
+        const genreArray = mangaData.genres.split(",");
+        genreArray.forEach((genre: string) => {
+          genreSet.add(genre.trim());
+        });
+      });
+
+      setAllGenres([...genreSet]);
+
       if (
         selectedFilters.genres.length === 0 &&
         selectedFilters.status.length === 0
       ) {
         setFilteredData(queryData.data);
-        const allGenres: string[] = [];
-        queryData.data.forEach((mangaData: MangaData) => {
-          const genreArray = mangaData.genres.split(",");
-          genreArray.forEach((genre: string) => {
-            if (!allGenres.includes(genre.trim())) {
-              allGenres.push(genre.trim());
-            }
-          });
-        });
-        setAllGenres(allGenres);
-        console.log(allGenres);
       } else {
         const filtered = queryData.data.filter((mangaData: MangaData) => {
           const genreMatch =
@@ -118,7 +139,7 @@ const Home: NextPage = () => {
     queryData.data,
     queryData.isSuccess,
   ]);
-  console.log(allGenres);
+
   // console.log(queryData);
   function isMangaDataArray(data: unknown): data is MangaData[] {
     // console.log(data);
