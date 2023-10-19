@@ -115,6 +115,13 @@ export const CategoryFilter = ({
     setSelectedFilters(updatedFilters);
   };
 
+  const handleClear = (sectionId: string) => {
+    const updatedFilters = { ...selectedFilters };
+    updatedFilters[sectionId] = []; // Reset the array for the respective section
+    setSelectedFilters(updatedFilters);
+    onApplyFilters(updatedFilters); // If you want to apply changes immediately
+  };
+
   return (
     <div className="bg-gray-900">
       {/* Mobile filter dialog */}
@@ -288,7 +295,7 @@ export const CategoryFilter = ({
                       onSubmit={onFilterChange}
                     >
                       <div className="min-w-[min-content]">
-                        <div className="flex gap-2">
+                        <div className="mb-4 flex gap-2">
                           <button
                             type="submit"
                             className="mt-1  rounded bg-indigo-600 px-5 py-1 text-sm font-medium text-white hover:bg-indigo-500"
@@ -296,8 +303,9 @@ export const CategoryFilter = ({
                             Apply
                           </button>
                           <button
-                            type="submit"
+                            type="button"
                             className="mt-1  rounded bg-red-600 px-5 py-1 text-sm font-medium text-white hover:bg-red-500"
+                            onClick={() => handleClear(section.id)}
                           >
                             Clear
                           </button>
