@@ -53,6 +53,7 @@ const Home: NextPage = () => {
 
   //controls the username being input via the first page.
   const [input, setInput] = useState<string>("");
+  //determines when the username get's queried.
   const [executeQuery, SetExectureQuery] = useState<boolean>(false);
   const queryData = api.user.getIdByUsername.useQuery(
     { username: input },
@@ -76,11 +77,11 @@ const Home: NextPage = () => {
       },
     }
   );
+  //useCallBack memoize functions in react. Returns memoized version of the callback function which only changes if one of the dependencies specified int he dependancy array changes
   const updateFilteredData = useCallback(
     (filters: filter) => {
       if (queryData.isSuccess && isMangaDataArray(queryData.data)) {
         if (filters.genres.length === 0 && filters.status.length === 0) {
-          // rest of the logic remains the same...
         } else {
           const filtered = queryData.data.filter((mangaData: MangaData) => {
             const genreMatch =
