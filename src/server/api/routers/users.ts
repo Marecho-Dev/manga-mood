@@ -315,8 +315,9 @@ const malUsernameSearch = async (username: string): Promise<string> => {
     return "success";
   } catch (error) {
     const err = error as AxiosError;
+    console.log(err);
     if (err.response?.status === 404) {
-      return "failure";
+      return err.response?.statusText;
     }
     throw err.message;
   }
@@ -332,18 +333,22 @@ const isUserNull = async (user: User[], username: string, ctx: Context) => {
         "user is null in our db - checking if the name exists on MAL"
       );
       const queryResponse = await malUsernameSearch(username);
+      console.log("query response is " + queryResponse);
       let newUser: User | undefined;
-      if (queryResponse === "success")
+      if (queryResponse === "success") {
         newUser = await ctx.prisma.user.create({
           data: {
             username: username,
           },
         });
-      console.log("creating user in our db");
-      console.log("going to search for user manga list now");
 
-      return userMangaListSearch(newUser ? [newUser] : [], username, ctx);
+        return userMangaListSearch(newUser ? [newUser] : [], username, ctx);
+      } else {
+        console.log("returning user not found");
+        return queryResponse;
+      }
     } catch (error) {
+      console.log(error);
       return "failure";
     }
   } else {

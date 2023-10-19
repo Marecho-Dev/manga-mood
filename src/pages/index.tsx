@@ -5,6 +5,8 @@ import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/loading";
 import { CategoryFilter } from "~/components/categoryFilter";
 import { ContentCard } from "~/components/contentCard";
+import { useQueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
 //this is the home page
 
 type MangaData = {
@@ -26,6 +28,7 @@ type MangaData = {
 type filter = { genres: string[]; status: string[] };
 
 const Home: NextPage = () => {
+  const queryClient = useQueryClient();
   //comment
   //this is home page. Created user variable which is the useUser hook from clerk.
   //trpc lets you create server functions that run on a vercel server. Fetch data from database so you can get data in the rigth shape without
@@ -54,7 +57,23 @@ const Home: NextPage = () => {
   const [executeQuery, SetExectureQuery] = useState<boolean>(false);
   const queryData = api.user.getIdByUsername.useQuery(
     { username: input },
-    { enabled: executeQuery }
+    {
+      enabled: executeQuery,
+      onSuccess: (data) => {
+        // Invalidate the query after it returns success
+        const queryKey = getQueryKey(
+          api.user.getIdByUsername,
+          { username: input },
+          "query"
+        );
+        if (data === "Not Found") {
+          queryClient.removeQueries(queryKey);
+          setIsValidUsername(false);
+          SetExectureQuery(false);
+          setInput("");
+        }
+      },
+    }
   );
   const [allGenres, setAllGenres] = useState<string[]>([]);
   useEffect(() => {
@@ -106,12 +125,11 @@ const Home: NextPage = () => {
       data.every((item) => typeof item === "object" && "mal_id" in item)
     );
   }
+  const [isValidUsername, setIsValidUsername] = useState<boolean | null>(null);
 
   if (!queryData.isSuccess && queryData.isLoading && queryData.isFetching)
     return <LoadingPage />;
-  if (queryData.isSuccess) {
-    // console.log(queryData);
-  }
+
   return (
     <>
       <Head>
@@ -120,51 +138,59 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {!queryData.isSuccess && !queryData.isError && (
-        <main className="flex h-screen items-center justify-center">
-          <div className="flex h-24 w-full items-center rounded-md bg-gray-700 md:max-w-2xl">
-            <input
-              placeholder=">Enter your MAL Username (e.g. Marecho)"
-              className="justify-centerborder-none flex h-full w-full items-center bg-transparent p-2 text-xl text-gray-300 focus:outline-none"
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
+        <main className="flex h-screen flex-col items-center justify-center">
+          <div className="relative flex w-full flex-col md:max-w-2xl">
+            <div className="flex h-24 w-full items-center rounded-md bg-gray-700 md:max-w-2xl">
+              <input
+                placeholder=">Enter your MAL Username (e.g. Marecho)"
+                className="justify-centerborder-none flex h-full w-full items-center bg-transparent p-2 text-xl text-gray-300 focus:outline-none"
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    if (input !== "") {
+                      SetExectureQuery(true);
+                      // console.log(queryData);
+                    }
+                  }
+                }}
+              />
+              <button
+                className="flex items-center rounded-full p-5 "
+                onClick={() => {
                   if (input !== "") {
                     SetExectureQuery(true);
-                    // console.log(queryData);
+                    // You can also add other actions here.
                   }
-                }
-              }}
-            />
-            <button
-              className="flex items-center rounded-full p-5 "
-              onClick={() => {
-                if (input !== "") {
-                  SetExectureQuery(true);
-                  // You can also add other actions here.
-                }
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1}
-                stroke="currentColor"
-                className="h-12 w-12 hover:stroke-gray-300"
+                }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1}
+                  stroke="currentColor"
+                  className="h-12 w-12 hover:stroke-gray-300"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </button>
+            </div>
+            {isValidUsername == false && (
+              <div className="absolute left-0 top-full p-2 text-rose-400">
+                * Invalid myanimelist username, please input a valid username
+              </div>
+            )}
           </div>
         </main>
       )}
+
       {queryData.isSuccess && isMangaDataArray(queryData.data) && (
         <div className="flex flex-col items-center justify-center">
           <div className="mt-5 flex w-full items-end justify-end px-2 md:mt-20 md:px-20">
