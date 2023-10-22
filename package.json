@@ -32,7 +32,8 @@
     "sharp": "^0.32.1",
     "superjson": "1.9.1",
     "tippy.js": "^6.3.7",
-    "zod": "^3.20.6"
+    "zod": "^3.20.6",
+    "zustand": "^4.4.3"
   },
   "devDependencies": {
     "@types/eslint": "^8.21.1",
